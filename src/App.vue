@@ -1,28 +1,73 @@
 <template>
-  <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <Chips />
-  </div>
+  <v-app>
+    <v-app-bar
+      app
+      color="yellow darken-4"
+      dark
+      hide-on-scroll
+    >
+      <div class="d-flex align-center">
+        <v-img
+          alt="Vuetify Logo"
+          class="shrink mr-2"
+          contain
+          src="https://cdn.vuetifyjs.com/images/logos/vuetify-logo-dark.png"
+          transition="scale-transition"
+          width="40"
+        />
+      </div>
+      <p class="title">Salon App</p>
+      <v-spacer></v-spacer>
+
+      <v-btn v-if="isLoggedIn" v-on:click="logout" depressed text medium>Logout</v-btn>
+    </v-app-bar>
+    <v-content>
+      <router-view/>
+    </v-content>
+    <BottomNav/>
+  </v-app>
 </template>
 
 <script>
-import Chips from './components/Chips.vue'
+import firebase from 'firebase';
+import BottomNav from './components/BottomNav';
 
 export default {
   name: 'App',
+
   components: {
-    Chips
+    BottomNav,
+  },
+
+  data: () => ({
+    isLoggedIn: false ,
+    currentUser: false
+  }),
+  created() {
+    if (firebase.auth().currentUser) {
+      this.isLoggedIn = true;
+      this.currentUser = firebase.auth().currentUser.email;
+    }
+  },
+  methods: {
+    logout: function() {
+      firebase
+        .auth()
+        .signOut()
+        .then(() => {
+          location.reload(true);
+        });
+    }
   }
-}
+};
 </script>
 
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
+<style scoped>
+  body {
+    overflow-x: hidden;
+  }
+  .title {
+    margin-bottom: 0;
+  }
+
 </style>
