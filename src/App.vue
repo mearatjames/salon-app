@@ -4,7 +4,6 @@
       app
       color="yellow darken-4"
       dark
-      hide-on-scroll
     >
       <div class="d-flex align-center">
         <v-img

@@ -1,0 +1,16 @@
+Add form validation to Transaction
+
+Database {
+	schema,
+	writing,
+	updating,
+	delete,
+	reading
+}
+
+User identifier
+
+Graphing {
+	Bar Chart,
+	Pie Chart
+}
