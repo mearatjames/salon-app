@@ -1,7 +1,9 @@
 <template>
   <div>
-    <v-form>
-      <v-card class="transaction-card">
+    <v-form
+    ref="form"
+    >
+      <v-card max-width="450" :elevation="12" class="transaction-card">
       <v-menu
             ref="datePicker"
             v-model="datePicker"
@@ -36,6 +38,7 @@
       required
       prefix="$"
       type='number'
+      inputmode="decimal"
     >{{price}}</v-text-field>
     <v-text-field
       v-model="tips"
@@ -45,30 +48,31 @@
       prefix="$"
       required
       type='number'
+      inputmode="decimal"
     >{{tips}}</v-text-field>
+      <v-row justify="center">
+      <v-dialog v-model="dialog" max-width="350">
+        <template v-slot:activator="{ on }">
+          <v-btn class='add' rounded color="yellow darken-4" dark v-on="on">Add Transaction</v-btn>
+        </template>
+        <v-card>
+          <v-card-title class="headline">Is this correct?</v-card-title>
+          <v-card-text>
+            <strong>Date:</strong>  {{dialogContent.date}} <br>
+            <strong>Service:</strong>  {{dialogContent.service}} <br>
+            <strong>Price:</strong> ${{dialogContent.price}} <br>
+            <strong>Tips:</strong> ${{dialogContent.tips}}
+          </v-card-text>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn color="red darken-4" text @click="dialog = false">Cancel</v-btn>
+            <v-btn color="green darken-1" text @click="dialog = false">Ok</v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+    </v-row>
       </v-card>
     </v-form>
-    <v-row justify="center">
-    <v-dialog v-model="dialog" max-width="350">
-      <template v-slot:activator="{ on }">
-        <v-btn color="yellow darken-4" dark v-on="on">Add Transaction</v-btn>
-      </template>
-      <v-card>
-        <v-card-title class="headline">Is this correct?</v-card-title>
-        <v-card-text>
-          <strong>Date:</strong>  {{dialogContent.date}} <br>
-          <strong>Service:</strong>  {{dialogContent.service}} <br>
-          <strong>Price:</strong> ${{dialogContent.price}} <br>
-          <strong>Tips:</strong> ${{dialogContent.tips}}
-        </v-card-text>
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn color="red darken-4" text @click="dialog = false">Cancel</v-btn>
-          <v-btn color="green darken-1" text @click="dialog = false">Ok</v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
-  </v-row>
   </div>
 </template>
 
@@ -83,7 +87,7 @@ export default {
   data: vm => ({
     dialog: false,
     datePicker: false,
-		services: ['Manicure', 'Pedicure', 'Gel', 'Fill', 'Design'],
+		services: ['Regular Mani', 'Gel Mani', 'Fullset', 'Fullset Ombre', 'Fill', 'Design', 'Regular Pedi', 'Gel Pedi', 'Deluxe Pedi', 'Extra'],
 		selectedServices: [],
 		price: null,
 		tips: null,
@@ -144,7 +148,10 @@ export default {
  .transaction-card {
    width: 90%;
    margin: 40px auto;
-   padding: 60px 20px;
+   padding: 40px 20px;
+ }
+ .add {
+   margin-top: 20px;
  }
 
 </style>

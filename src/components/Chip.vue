@@ -1,9 +1,10 @@
 <template>
     <v-chip
-	v-bind:class="[{ 'md-accent': selected }, '']" @click="select"
-      class="ma-2"
-      color="yellow darken-4"
-      :outlined="selected ? false : true"
+		@click="select"
+		class="ma-2"
+		color="yellow darken-4"
+		active-class="selectedChip"
+		outlined
     >
 	{{service}}
     </v-chip>
@@ -35,5 +36,7 @@ export default {
 </script>
 
 <style>
-
+	.selectedChip {
+		background-color: orange;
+	}
 </style>

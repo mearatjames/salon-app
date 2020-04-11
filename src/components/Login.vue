@@ -2,7 +2,12 @@
 	<v-card
     class="mx-auto login"
     max-width="344"
+    :elevation="12"
   >
+    <v-card-title class="headline"><v-avatar color="yellow darken-4">
+      <v-icon dark>mdi-account-circle</v-icon>
+    </v-avatar></v-card-title>
+    <v-card-title class="headline">AiAi Salon App</v-card-title>
     <v-card-text>
     <v-form v-model="valid">
     <v-container>
@@ -16,10 +21,8 @@
           <v-text-field v-model="password" :rules="passwordRules" label="Password" required></v-text-field>
         </v-col>
       </v-row>
-      <v-row>
-        <div class="text-center">
-          <v-btn v-on:click="login" rounded color="primary" dark>Login</v-btn>
-        </div>
+      <v-row justify="center">
+          <v-btn min-width="150" class="login-btn" v-on:click="login" rounded color="yellow darken-4" dark>Login</v-btn>
       </v-row>
     </v-container>
   </v-form>
@@ -65,6 +68,11 @@ export default {
 <style scoped>
 	.login {
 		margin-top: 50px;
+    padding-top: 20px;
 	}
+  .headline {
+    justify-content: center;
+    padding-bottom: 0;
+  }
 
 </style>
