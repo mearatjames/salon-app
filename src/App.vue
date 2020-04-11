@@ -54,6 +54,7 @@ export default {
         .auth()
         .signOut()
         .then(() => {
+          localStorage.removeItem('user');
           location.reload(true);
         });
     }

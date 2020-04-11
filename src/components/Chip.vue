@@ -30,6 +30,9 @@ export default {
 					this.$emit('deselectService', this.service)
 					this.selected = false
 				}
+			},
+			reset() {
+				this.selected = false
 			}
 	}
 }

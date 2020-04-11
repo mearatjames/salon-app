@@ -21,6 +21,7 @@
                 label="Date"
                 persistent-hint
                 prepend-icon="event"
+                inputmode="none"
                 @blur="date = parseDate(dateFormatted)"
                 v-on="on"
               ></v-text-field>
@@ -29,7 +30,7 @@
           </v-menu>
         <div class="text-center">
       <Chip
-        v-for="service in services" v-bind:key="service" :service="service" v-on:selectService="addService" v-on:deselectService="removeService"
+        v-for="service in services" ref="chips" :key="service" :service="service" v-on:selectService="addService" v-on:deselectService="removeService"
       ></Chip>
     </div>
     <v-text-field
@@ -59,7 +60,14 @@
           :disabled="validate == false"
           class='add' rounded color="yellow darken-4" @click="add">Add Transaction</v-btn>
       <v-dialog v-model="dialog" max-width="350">
-        <v-card>
+        <div v-if="progress" class="text-center">
+          <v-card class="progress">
+          <p>Processing</p>
+         <v-progress-circular  indeterminate :size="70"
+      :width="7" color="red"></v-progress-circular>
+          </v-card>
+        </div>
+        <v-card v-else>
           <v-card-title class="headline">Is this correct?</v-card-title>
           <v-card-text>
             <strong>Date:</strong>  {{dialogContent.date}} <br>
@@ -69,19 +77,35 @@
           </v-card-text>
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn color="red darken-4" text @click="dialog = false">Cancel</v-btn>
-            <v-btn color="green darken-1" text @click="dialog = false">Ok</v-btn>
+            <v-btn color="red darken-4" text @click="onCancel">Cancel</v-btn>
+            <v-btn color="green darken-1" text @click="onConfirm">Ok</v-btn>
           </v-card-actions>
         </v-card>
       </v-dialog>
     </v-row>
       </v-card>
     </v-form>
+    <v-snackbar
+      color='success'
+      top
+      v-model="snackbar"
+      :timeout="3000"
+    > The transaction has been added!
+      <v-btn
+        dark
+        text
+        @click="snackbar = false"
+      >
+        Close
+      </v-btn>
+    </v-snackbar>
   </div>
 </template>
 
 <script>
 import Chip from './Chip.vue'
+import firebase from 'firebase';
+import db from './firebaseInit'
 
 export default {
   name: 'Transaction',
@@ -89,6 +113,7 @@ export default {
     Chip
   },
   data: vm => ({
+    snackbar: false,
     dialog: false,
     datePicker: false,
 		services: ['Regular Mani', 'Gel Mani', 'Regular Pedi', 'Gel Pedi', 'Deluxe Pedi', 'Design', 'Fullset', 'Fullset Ombre', 'Fill', 'Extra', 'Other'],
@@ -99,6 +124,8 @@ export default {
     dateFormatted: vm.formatDate(new Date().toISOString().substr(0, 10)),
 		active: false,
     value: null,
+    progress: false,
+    user: JSON.parse(localStorage.getItem('user')).email
   }),
   computed: {
 		dialogContent: function () {
@@ -123,6 +150,17 @@ export default {
       },
     },
   methods: {
+  cleanup() {
+    this.progress = false
+    this.dialog = false
+    this.snackbar = true
+    this.selectedServices= []
+		this.price = null
+		this.tips = null
+    this.date = new Date().toISOString().substr(0, 10)
+    this.dateFormatted = this.formatDate(new Date().toISOString().substr(0, 10))
+    this.$refs.chips.forEach((e) => e.reset())
+  },
   add() {
     this.dialog = true;
   },
@@ -133,12 +171,31 @@ export default {
 	this.selectedServices = this.selectedServices.filter(el => el !== service )
 	},
 	onConfirm () {
-		// Do something
-		this.value = 'Agreed'
+    this.progress = true
+    let service = {}
+    this.selectedServices.map((e) => {
+      service[e] = true
+    })
+    db.collection("transactions").add({
+    date: firebase.firestore.Timestamp.fromDate(new Date(this.date)),
+    price: parseFloat(this.price),
+    tips: parseFloat(this.tips),
+    user: db.doc(`/users/${this.user}`),
+    service,
+})
+.then((docRef) => {
+    this.cleanup()
+    console.log("Document written with ID: ", docRef.id);
+})
+.catch((error) => {
+    this.progress = false
+    this.dialog = false
+    console.error("Error adding document: ", error);
+});
 	},
 	onCancel () {
 		// Do nothing
-		this.value = 'Disagreed'
+		this.dialog = false
   },
   formatDate (date) {
         if (!date) return null
@@ -167,6 +224,10 @@ export default {
  .add {
    margin-top: 20px;
    color: white;
+ }
+
+ .progress {
+   padding: 40px 10px;
  }
 
 </style>

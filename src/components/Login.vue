@@ -19,7 +19,10 @@
       </v-row>
       <v-row>
         <v-col>
-          <v-text-field color='yellow darken-4' v-model="password" :rules="passwordRules" label="Password" required></v-text-field>
+          <v-text-field :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'" 
+          :type="show1 ? 'text' : 'password'"
+          @click:append="show1 = !show1"
+          color='yellow darken-4' v-model="password" :rules="passwordRules" label="Password" required></v-text-field>
         </v-col>
       </v-row>
       <v-row justify="center">
@@ -47,10 +50,13 @@
 
 <script>
 import firebase from "firebase";
+import db from './firebaseInit'
+
 export default {
   name: "login",
   data: function() {
     return {
+      show1: false,
       snackbar: false,
       email: "",
       password: "",
@@ -69,8 +75,11 @@ export default {
         .auth()
         .signInWithEmailAndPassword(this.email, this.password)
         .then(
-          () => {
+          (data) => {
+            db.collection("users").doc(data.user.email).get().then((querySnapshot) => {
+            localStorage.setItem('user', JSON.stringify({email: data.user.email, name: querySnapshot.data().firstname}));
             location.reload(true);
+          });
           },
           () => {
             this.snackbar = true;
