@@ -1,4 +1,5 @@
 <template>
+  <div>
 	<v-card
     class="mx-auto login"
     max-width="344"
@@ -13,12 +14,12 @@
     <v-container>
       <v-row>
         <v-col>
-          <v-text-field v-model="email" :rules="emailRules" label="Email" required></v-text-field>
+          <v-text-field color='yellow darken-4' v-model="email" :rules="emailRules" label="Email" required></v-text-field>
         </v-col>
       </v-row>
       <v-row>
         <v-col>
-          <v-text-field v-model="password" :rules="passwordRules" label="Password" required></v-text-field>
+          <v-text-field color='yellow darken-4' v-model="password" :rules="passwordRules" label="Password" required></v-text-field>
         </v-col>
       </v-row>
       <v-row justify="center">
@@ -28,6 +29,20 @@
   </v-form>
     </v-card-text>
   </v-card>
+  <v-snackbar
+      color='error'
+      v-model="snackbar"
+      :timeout="3000"
+    > Email and/or Password is incorrect.
+      <v-btn
+        dark
+        text
+        @click="snackbar = false"
+      >
+        Close
+      </v-btn>
+    </v-snackbar>
+  </div>
 </template>
 
 <script>
@@ -36,10 +51,11 @@ export default {
   name: "login",
   data: function() {
     return {
+      snackbar: false,
       email: "",
       password: "",
       valid: false,
-      passwordRules: [v => !!v || "Name is required"],
+      passwordRules: [v => !!v || "Password is required"],
       emailRules: [
         v => !!v || "E-mail is required",
         v => /.+@.+/.test(v) || "E-mail must be valid"
@@ -56,8 +72,8 @@ export default {
           () => {
             location.reload(true);
           },
-          err => {
-            alert(err.message);
+          () => {
+            this.snackbar = true;
           }
         );
     }

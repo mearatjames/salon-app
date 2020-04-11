@@ -6,6 +6,7 @@
       <v-card max-width="450" :elevation="12" class="transaction-card">
       <v-menu
             ref="datePicker"
+            color="yellow darken-4"
             v-model="datePicker"
             :close-on-content-click="true"
             transition="scale-transition"
@@ -16,6 +17,7 @@
             <template v-slot:activator="{ on }">
               <v-text-field
                 v-model="dateFormatted"
+                color="yellow darken-4"
                 label="Date"
                 persistent-hint
                 prepend-icon="event"
@@ -23,7 +25,7 @@
                 v-on="on"
               ></v-text-field>
             </template>
-            <v-date-picker v-model="date" no-title @input="datePicker = false"></v-date-picker>
+            <v-date-picker color="yellow darken-4" v-model="date" no-title @input="datePicker = false"></v-date-picker>
           </v-menu>
         <div class="text-center">
       <Chip
@@ -32,6 +34,7 @@
     </div>
     <v-text-field
       v-model="price"
+      color="yellow darken-4"
       prepend-icon="mdi-cash-100"
       label="Price"
       placeholder=" "
@@ -42,6 +45,7 @@
     >{{price}}</v-text-field>
     <v-text-field
       v-model="tips"
+      color="yellow darken-4"
       prepend-icon="mdi-hand-heart"
       label="Tips"
       placeholder=" "
@@ -51,10 +55,10 @@
       inputmode="decimal"
     >{{tips}}</v-text-field>
       <v-row justify="center">
+          <v-btn 
+          :disabled="validate == false"
+          class='add' rounded color="yellow darken-4" @click="add">Add Transaction</v-btn>
       <v-dialog v-model="dialog" max-width="350">
-        <template v-slot:activator="{ on }">
-          <v-btn class='add' rounded color="yellow darken-4" dark v-on="on">Add Transaction</v-btn>
-        </template>
         <v-card>
           <v-card-title class="headline">Is this correct?</v-card-title>
           <v-card-text>
@@ -87,14 +91,14 @@ export default {
   data: vm => ({
     dialog: false,
     datePicker: false,
-		services: ['Regular Mani', 'Gel Mani', 'Fullset', 'Fullset Ombre', 'Fill', 'Design', 'Regular Pedi', 'Gel Pedi', 'Deluxe Pedi', 'Extra'],
+		services: ['Regular Mani', 'Gel Mani', 'Regular Pedi', 'Gel Pedi', 'Deluxe Pedi', 'Design', 'Fullset', 'Fullset Ombre', 'Fill', 'Extra', 'Other'],
 		selectedServices: [],
 		price: null,
 		tips: null,
     date: new Date().toISOString().substr(0, 10),
     dateFormatted: vm.formatDate(new Date().toISOString().substr(0, 10)),
 		active: false,
-		value: null,
+    value: null,
   }),
   computed: {
 		dialogContent: function () {
@@ -104,7 +108,14 @@ export default {
         tips: this.tips,
         service: this.selectedServices.join(', ')
       }
-		}
+    },
+    validate: function() {
+        if (this.selectedServices.length >= 1 && this.price !== null && this.price > 0 ) {
+          return true;
+        } else {
+          return false;
+        }
+      }
   },
   watch: {
       date () {
@@ -112,6 +123,9 @@ export default {
       },
     },
   methods: {
+  add() {
+    this.dialog = true;
+  },
 	addService(service) {
 		this.selectedServices.push(service)
 	},
@@ -152,6 +166,7 @@ export default {
  }
  .add {
    margin-top: 20px;
+   color: white;
  }
 
 </style>

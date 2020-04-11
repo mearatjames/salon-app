@@ -2,9 +2,9 @@
     <v-chip
 		@click="select"
 		class="ma-2"
-		color="yellow darken-4"
-		active-class="selectedChip"
-		outlined
+		light
+		:color="selected ? 'yellow darken-4' : null"
+		:text-color="selected ? 'white' : null"
     >
 	{{service}}
     </v-chip>
@@ -36,7 +36,7 @@ export default {
 </script>
 
 <style>
-	.selectedChip {
-		background-color: orange;
-	}
+	.v-application .ma-2 {
+    margin: 4px 3px !important;
+}
 </style>
