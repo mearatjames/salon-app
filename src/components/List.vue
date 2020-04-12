@@ -1,12 +1,13 @@
 <template>
   <div>
     <v-list two-line subheader>
-      <v-subheader> <strong>Monday 04/06/2020</strong> </v-subheader>
+      <template v-for="(tdate, date) in transactions" >
+        <v-subheader :key="date"> <strong>{{date}}</strong> </v-subheader>
 
-      <v-list-item>
+      <v-list-item v-for="(transaction, index) in tdate" :key="date + index">
 		<v-list-item-avatar>
           <v-avatar color="yellow darken-4" size="30">
-      <span class="white--text title">1</span>
+      <span class="white--text title">{{index + 1}}</span>
     </v-avatar>
         </v-list-item-avatar>
 		<v-list-item-content>
@@ -14,10 +15,12 @@
 		<v-list-item-subtitle><strong></strong> </v-list-item-subtitle>
         </v-list-item-content>
         <v-list-item-content class="amount">
-          <v-list-item-subtitle><strong>$60</strong></v-list-item-subtitle>
-          <v-list-item-subtitle>Tips $5</v-list-item-subtitle>
+          <v-list-item-subtitle><strong>{{transaction.price}}</strong></v-list-item-subtitle>
+          <v-list-item-subtitle>Tips {{transaction.tips}}</v-list-item-subtitle>
         </v-list-item-content>
       </v-list-item>
+      </template>
+
       <v-list-item>
 		<v-list-item-avatar>
           <v-avatar color="yellow darken-4" size="30">
@@ -105,11 +108,11 @@
 export default {
   name: "List",
   props: {
-    transactions: Array,
+    transactions: Object,
   },
   data: () => ({
     settings: []
-  })
+  }),
 };
 </script>
 
