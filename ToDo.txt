@@ -1,16 +1,13 @@
-Add form validation to Transaction
-
-Database {
-	schema,
-	writing,
-	updating,
-	delete,
-	reading
-}
-
-User identifier
+Check the Date object for the transaction date (timezone issue)
 
 Graphing {
 	Bar Chart,
 	Pie Chart
 }
+
+Database {
+	updating,
+	delete,
+	reading
+}
+

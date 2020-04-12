@@ -50,7 +50,7 @@ router.beforeEach((to, from, next) => {
   // Check for requiresAuth guard
   if (to.matched.some((record) => record.meta.requiresAuth)) {
     // Check if NO logged user
-    if (!firebase.auth().currentUser) {
+    if (!firebase.auth().currentUser || !localStorage.getItem('user')) {
       // Go to login
       next({
         path: "/login",

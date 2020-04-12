@@ -104,7 +104,6 @@
 
 <script>
 import Chip from './Chip.vue'
-import firebase from 'firebase';
 import db from './firebaseInit'
 
 export default {
@@ -177,7 +176,7 @@ export default {
       service[e] = true
     })
     db.collection("transactions").add({
-    date: firebase.firestore.Timestamp.fromDate(new Date(this.date)),
+    date: new Date(this.date),
     price: parseFloat(this.price),
     tips: parseFloat(this.tips),
     user: db.doc(`/users/${this.user}`),

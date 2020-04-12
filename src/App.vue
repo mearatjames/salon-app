@@ -1,5 +1,5 @@
 <template>
-  <v-app>
+  <v-app class="override">
     <v-app-bar
       app
       color="yellow darken-4"
@@ -62,7 +62,10 @@ export default {
 };
 </script>
 
-<style scoped>
+<style>
+  .override .v-application--wrap {
+    min-height: 100%;
+  }
   body {
     overflow-x: hidden;
   }

@@ -92,7 +92,7 @@ export default {
 
 <style scoped>
 	.login {
-		margin-top: 50px;
+    margin-top: 50px;
     padding-top: 20px;
 	}
   .headline {
