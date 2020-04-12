@@ -2,7 +2,7 @@ import Vue from "vue";
 import Router from "vue-router";
 import Dashboard from "./components/Dashboard.vue";
 import Transaction from "./components/Transaction.vue";
-import Modify from "./components/Modify.vue";
+import List from "./components/List.vue";
 import Login from "./components/Login.vue";
 import firebase from "firebase";
 
@@ -27,9 +27,9 @@ let router = new Router({
       },
     },
     {
-      path: "/modify",
-      component: Modify,
-      name: "Modify",
+      path: "/list",
+      component: List,
+      name: "List",
       meta: {
         requiresAuth: true,
       },
