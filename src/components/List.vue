@@ -104,6 +104,9 @@
 <script>
 export default {
   name: "List",
+  props: {
+    transactions: Array,
+  },
   data: () => ({
     settings: []
   })
