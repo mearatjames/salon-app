@@ -2,6 +2,20 @@
   <div>
     <v-form ref="form">
       <v-card max-width="450" :elevation="12" class="transaction-card">
+        <v-img v-if="modify"
+      class="white--text title-edit align-end"
+      height="80px"
+    >
+      <v-card-title>Modify Transaction</v-card-title>
+    </v-img>
+        <v-img v-else
+      class="white--text title-add align-end"
+      height="80px"
+    >
+       <v-card-title>Add New Transaction</v-card-title>
+    </v-img>
+     
+    <div class="card-content">
         <v-menu
           ref="datePicker"
           color="yellow darken-4"
@@ -33,10 +47,11 @@
         </v-menu>
         <div class="text-center">
           <Chip
-            v-for="service in services"
+            v-for="(value, service) in services"
             ref="chips"
-            :key="service"
+            :key="service + value"
             :service="service"
+            :selected="value"
             v-on:selectService="addService"
             v-on:deselectService="removeService"
           ></Chip>
@@ -101,6 +116,7 @@
             </v-card>
           </v-dialog>
         </v-row>
+    </div>
       </v-card>
     </v-form>
     <v-snackbar color="success" top v-model="snackbar" :timeout="3000">
@@ -112,30 +128,34 @@
 
 <script>
 import Chip from "./Chip.vue";
-import db from "./firebaseInit";
+// import db from "./firebaseInit";
 
 export default {
   name: "Transaction",
   components: {
     Chip
   },
+  props: {
+    transaction: Object,
+    modify: Boolean
+  },
   data: vm => ({
     snackbar: false,
     dialog: false,
     datePicker: false,
-    services: [
-      "Regular Mani",
-      "Gel Mani",
-      "Regular Pedi",
-      "Gel Pedi",
-      "Deluxe Pedi",
-      "Design",
-      "Fullset",
-      "Fullset Ombre",
-      "Fill",
-      "Extra",
-      "Other"
-    ],
+    services: {
+      "Regular Mani": false,
+      "Gel Mani": false,
+      "Regular Pedi": false,
+      "Gel Pedi": false,
+      "Deluxe Pedi": false,
+      "Design": false,
+      "Fullset": false,
+      "Fullset Ombre": false,
+      "Fill": false,
+      "Extra": false,
+      "Other": false,
+    },
     selectedServices: [],
     price: null,
     tips: null,
@@ -152,12 +172,12 @@ export default {
         date: this.dateFormatted,
         price: this.price,
         tips: this.tips,
-        service: this.selectedServices.join(", ")
+        service: Object.keys(this.services).filter((key) => this.services[key]).join(', ')
       };
     },
     validate: function() {
       if (
-        this.selectedServices.length >= 1 &&
+        Object.values(this.services).some(e => e === true) &&
         this.price !== null &&
         this.price > 0
       ) {
@@ -170,6 +190,16 @@ export default {
   watch: {
     date() {
       this.dateFormatted = this.formatDate(this.date);
+    }
+  },
+  created() {
+    if (this.transaction !== undefined && this.transaction !== null) {
+      this.price = this.transaction.price
+      this.tips = this.transaction.tips
+      this.date = this.transaction.date.toLocaleDateString('fr-CA')
+      for (const service in this.transaction.service) {
+        this.services[service] = this.transaction.service[service]
+      }
     }
   },
   methods: {
@@ -190,36 +220,34 @@ export default {
       this.dialog = true;
     },
     addService(service) {
-      this.selectedServices.push(service);
+      this.services[service] = true;
     },
     removeService(service) {
-      this.selectedServices = this.selectedServices.filter(
-        el => el !== service
-      );
+      this.services[service] = false;
     },
     onConfirm() {
       this.progress = true;
       let service = {};
-      this.selectedServices.map(e => {
-        service[e] = true;
-      });
-      db.collection("transactions")
-        .add({
-          date: new Date(this.date),
-          price: parseFloat(this.price),
-          tips: parseFloat(this.tips),
-          user: db.doc(`/users/${this.user}`),
-          service
-        })
-        .then(docRef => {
-          this.cleanup();
-          console.log("Document written with ID: ", docRef.id);
-        })
-        .catch(error => {
-          this.progress = false;
-          this.dialog = false;
-          console.error("Error adding document: ", error);
-        });
+      Object.keys(this.services).filter((key) => this.services[key]).forEach(e => service[e] = true)
+
+      console.log(service)
+      // db.collection("transactions")
+      //   .add({
+      //     date: new Date(this.date),
+      //     price: parseFloat(this.price),
+      //     tips: parseFloat(this.tips),
+      //     user: db.doc(`/users/${this.user}`),
+      //     service
+      //   })
+      //   .then(docRef => {
+      //     this.cleanup();
+      //     console.log("Document written with ID: ", docRef.id);
+      //   })
+      //   .catch(error => {
+      //     this.progress = false;
+      //     this.dialog = false;
+      //     console.error("Error adding document: ", error);
+      //   });
     },
     onCancel() {
       // Do nothing
@@ -236,16 +264,24 @@ export default {
 
       const [month, day, year] = date.split("/");
       return `${year}-${month.padStart(2, "0")}-${day.padStart(2, "0")}`;
-    }
+    },
   }
 };
 </script>
 
 <style scoped>
+.card-content {
+  padding: 20px;
+}
+.title-edit {
+  background-color: tomato;
+}
+.title-add {
+  background-color: rgb(239, 163, 20);
+}
 .transaction-card {
   width: 90%;
   margin: 40px auto;
-  padding: 40px 20px;
 }
 .add {
   margin-top: 20px;

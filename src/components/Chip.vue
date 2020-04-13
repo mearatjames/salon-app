@@ -12,21 +12,19 @@
 export default {
   name: "Chip",
   props: {
-    service: String
+    service: String,
+    selected: Boolean,
   },
   data() {
     return {
-      selected: false
     };
   },
   methods: {
     select() {
       if (this.selected === false) {
         this.$emit("selectService", this.service);
-        this.selected = true;
       } else {
         this.$emit("deselectService", this.service);
-        this.selected = false;
       }
     },
     reset() {

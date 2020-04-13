@@ -1,7 +1,7 @@
 import Vue from "vue";
 import Router from "vue-router";
 import Dashboard from "./components/Dashboard.vue";
-import Transaction from "./components/Transaction.vue";
+import Add from "./components/Add.vue";
 import List from "./components/List.vue";
 import Login from "./components/Login.vue";
 import firebase from "firebase";
@@ -19,9 +19,9 @@ let router = new Router({
       },
     },
     {
-      path: "/transaction",
-      component: Transaction,
-      name: "Transaction",
+      path: "/add",
+      component: Add,
+      name: "Add",
       meta: {
         requiresAuth: true,
       },
