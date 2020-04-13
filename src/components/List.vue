@@ -1,6 +1,13 @@
 <template>
   <div v-if="delivered">
-    <Transaction v-if="active" :transaction="tData" :modify="modify" v-on:back="back" v-on:deleted="deleted" v-on:updated="updated"></Transaction>
+    <Transaction
+      v-if="active"
+      :transaction="tData"
+      :modify="modify"
+      v-on:back="back"
+      v-on:deleted="deleted"
+      v-on:updated="updated"
+    ></Transaction>
     <v-list v-else two-line subheader>
       <template v-for="(tdate, date) in transactions">
         <v-subheader :key="date">
@@ -27,10 +34,14 @@
             </v-list-item-content>
           </v-list-item>
         </template>
-            <div :key="date + 'Total'" class="total">
-            <v-chip class="ma-2" color="success" outlined>Total: ${{tdate.reduce((acc, current) => ({price: acc.price + current.price})).price}} | Tips: ${{tdate.reduce((acc, current) => ({tips: acc.tips + current.tips})).tips}}</v-chip>
-            </div>
-          <v-divider :key="'divider' + date"></v-divider>
+        <div :key="date + 'Total'" class="total">
+          <v-chip
+            class="ma-2"
+            color="success"
+            outlined
+          >Total: ${{tdate.reduce((acc, current) => ({price: acc.price + current.price})).price}} | Tips: ${{tdate.reduce((acc, current) => ({tips: acc.tips + current.tips})).tips}}</v-chip>
+        </div>
+        <v-divider :key="'divider' + date"></v-divider>
       </template>
     </v-list>
     <v-snackbar color="success" top v-model="snackbar" :timeout="3000">
@@ -39,42 +50,10 @@
     </v-snackbar>
   </div>
   <div v-else>
-    <v-skeleton-loader
-        ref="skeleton"
-        :type="type"
-        :tile="tile"
-        class="mx-auto"
-      ></v-skeleton-loader>
-    <v-skeleton-loader
-        ref="skeleton"
-        :type="type"
-        :tile="tile"
-        class="mx-auto"
-      ></v-skeleton-loader>
-    <v-skeleton-loader
-        ref="skeleton"
-        :type="type"
-        :tile="tile"
-        class="mx-auto"
-      ></v-skeleton-loader>
-    <v-skeleton-loader
-        ref="skeleton"
-        :type="type"
-        :tile="tile"
-        class="mx-auto"
-      ></v-skeleton-loader>
-    <v-skeleton-loader
-        ref="skeleton"
-        :type="type"
-        :tile="tile"
-        class="mx-auto"
-      ></v-skeleton-loader>
-    <v-skeleton-loader
-        ref="skeleton"
-        :type="type"
-        :tile="tile"
-        class="mx-auto"
-      ></v-skeleton-loader>
+    <v-skeleton-loader ref="skeleton" :type="type" :tile="tile" class="mx-auto"></v-skeleton-loader>
+    <v-skeleton-loader ref="skeleton" :type="type" :tile="tile" class="mx-auto"></v-skeleton-loader>
+    <v-skeleton-loader ref="skeleton" :type="type" :tile="tile" class="mx-auto"></v-skeleton-loader>
+    <v-skeleton-loader ref="skeleton" :type="type" :tile="tile" class="mx-auto"></v-skeleton-loader>
   </div>
 </template>
 
@@ -89,7 +68,7 @@ export default {
   },
   data: () => ({
     tile: false,
-    type: 'list-item-avatar-three-line',
+    type: "list-item-avatar-three-line",
     types: [],
     settings: [],
     active: false,
@@ -101,72 +80,73 @@ export default {
     transactions: {},
     user: JSON.parse(localStorage.getItem("user")).email
   }),
-  mounted () {
-      this.types = Object.keys(this.$refs.skeleton.rootTypes)
-    },
+  mounted() {
+    this.types = Object.keys(this.$refs.skeleton.rootTypes);
+  },
   created() {
     db.collection("transactions")
       .where("user", "==", db.collection("users").doc(this.user))
       .where("date", ">=", new Date(this.dateQuery(30)))
-      .orderBy('date', 'desc')
+      .orderBy("date", "desc")
       .get()
       .then(querySnapshot => {
-       querySnapshot.forEach(doc => {
-          let data = doc.data()
-          let groupDate = data.date.toDate().toLocaleDateString()
+        querySnapshot.forEach(doc => {
+          let data = doc.data();
+          let groupDate = data.date.toDate().toLocaleDateString();
           let transaction = {
             id: doc.id,
             date: data.date.toDate(),
             price: data.price,
             tips: data.tips,
             service: data.service
-          }
+          };
           if (groupDate in this.transactions) {
-            this.transactions[groupDate].unshift(transaction)
+            this.transactions[groupDate].unshift(transaction);
           } else {
-            this.transactions[groupDate] = new Array(transaction)
+            this.transactions[groupDate] = new Array(transaction);
           }
         });
-        this.delivered = true
+        this.delivered = true;
       });
   },
   methods: {
     dateQuery(days) {
       let today = new Date();
-      return new Date().setDate(today.getDate()-days)
+      return new Date().setDate(today.getDate() - days);
     },
     edit: function(transaction) {
       this.tData = transaction;
       this.active = true;
     },
-    deleted(id) {
-      console.log(id)
-      for (let date in this.transactions) {
-        this.transactions[date] = this.transactions[date].filter(item => item.id !== id)
-        }
-      this.active = false
-      this.snackbarText = 'deleted'
-      this.snackbar = true
+    deleted(deleteItem) {
+      console.log(deleteItem);
+      if (this.transactions[deleteItem.date].length == 1) {
+        delete this.transactions[deleteItem.date];
+      } else {
+        this.transactions[deleteItem.date] = this.transactions[
+          deleteItem.date
+        ].filter(item => item.id !== deleteItem.id);
+      }
+      this.active = false;
+      this.snackbarText = "deleted";
+      this.snackbar = true;
     },
     back() {
-      this.active = false
-      console.log('here')
+      this.active = false;
     },
     updated(transaction) {
-      for (let date in this.transactions) {
-      this.transactions[date].forEach(item => {
-         if (item.id === transaction.id) {
-         item.id = transaction.id
-         item.price = transaction.data.price
-         item.tips = transaction.data.tips
-         item.date = transaction.data.date
-         item.service = transaction.data.service
-         }
-        })
-      }
-      this.active = false
-      this.snackbarText = 'updated'
-      this.snackbar = true
+      this.transactions[transaction.data.date.toLocaleDateString()].forEach(item => {
+        if (item.id === transaction.id) {
+          item.id = transaction.id;
+          item.price = transaction.data.price;
+          item.tips = transaction.data.tips;
+          item.service = transaction.data.service;
+        }
+      });
+
+      this.active = false;
+      this.snackbarText = "updated";
+      this.snackbar = true;
     }
   }
 };
@@ -183,8 +163,8 @@ export default {
   white-space: normal;
 }
 .total {
-    display: flex;
-    justify-content: flex-end;
-    padding-right: 10px;
+  display: flex;
+  justify-content: flex-end;
+  padding-right: 10px;
 }
 </style>

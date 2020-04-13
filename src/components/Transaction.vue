@@ -240,10 +240,14 @@ export default {
     },
     del() {
       this.deleteProgress = true;
+      let deleteItem = {
+        id: this.transaction.id,
+        date: this.transaction.date.toLocaleDateString()
+      }
       db.collection('transactions').doc(this.transaction.id).delete()
       .then(() => {
         console.log('Successfully deleted the document')
-        this.$emit("deleted", this.transaction.id);
+        this.$emit("deleted", deleteItem);
       })
       .catch((error) => console.log("Error removing document: ", error))
     },
