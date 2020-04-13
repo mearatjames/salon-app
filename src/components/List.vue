@@ -20,8 +20,8 @@
                 <span class="white--text title">{{index + 1}}</span>
               </v-avatar>
             </v-list-item-avatar>
-            <v-list-item-content>
-              <v-list-item-title>{{Object.keys(transaction.service).join(', ')}}</v-list-item-title>
+            <v-list-item-content class="service">
+              <v-list-item-title class="service-text">{{Object.keys(transaction.service).join(', ')}}</v-list-item-title>
               <v-list-item-subtitle>
                 <strong></strong>
               </v-list-item-subtitle>
