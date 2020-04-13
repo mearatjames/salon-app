@@ -21,7 +21,7 @@ export default {
   }),
   created() {
     db.collection("transactions")
-      .where("user", "==", db.collection("users").doc("mearatjames@gmail.com"))
+      .where("user", "==", db.collection("users").doc(this.user))
       .where("date", ">=", new Date(this.dateQuery(30)))
       .orderBy('date', 'desc')
       .get()
@@ -30,6 +30,8 @@ export default {
           let data = doc.data()
           let groupDate = data.date.toDate().toLocaleDateString()
           let transaction = {
+            id: doc.id,
+            date: data.date.toDate(),
             price: data.price,
             tips: data.tips,
             service: data.service

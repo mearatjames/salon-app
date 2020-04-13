@@ -27,8 +27,8 @@
           <v-date-picker
             color="yellow darken-4"
             v-model="date"
+            :max="new Date().toLocaleDateString('fr-CA')"
             no-title
-            @input="datePicker = false"
           ></v-date-picker>
         </v-menu>
         <div class="text-center">
@@ -139,8 +139,8 @@ export default {
     selectedServices: [],
     price: null,
     tips: null,
-    date: new Date().toISOString().substr(0, 10),
-    dateFormatted: vm.formatDate(new Date().toISOString().substr(0, 10)),
+    date: new Date().toLocaleDateString('fr-CA'),
+    dateFormatted: vm.formatDate(new Date().toLocaleDateString('fr-CA')),
     active: false,
     value: null,
     progress: false,
@@ -180,9 +180,9 @@ export default {
       this.selectedServices = [];
       this.price = null;
       this.tips = null;
-      this.date = new Date().toISOString().substr(0, 10);
+      this.date = new Date().toLocaleDateString('fr-CA');
       this.dateFormatted = this.formatDate(
-        new Date().toISOString().substr(0, 10)
+        new Date().toLocaleDateString('fr-CA')
       );
       this.$refs.chips.forEach(e => e.reset());
     },

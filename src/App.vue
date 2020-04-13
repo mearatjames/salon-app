@@ -40,7 +40,7 @@ export default {
 
   data: () => ({
     isLoggedIn: false ,
-    currentUser: false
+    currentUser: false,
   }),
   created() {
     if (firebase.auth().currentUser) {
