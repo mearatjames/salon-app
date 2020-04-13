@@ -1,10 +1,10 @@
 <template>
-  <v-bottom-navigation app grow fixed hide-on-scroll color="yellow darken-4">
+  <v-bottom-navigation app grow fixed color="yellow darken-4">
     <v-btn to="/" exact>
       <span>Dashboard</span>
       <v-icon>mdi-chart-line</v-icon>
     </v-btn>
-    <v-btn to="/transaction" exact>
+    <v-btn to="/add" exact>
       <span>Transaction</span>
       <v-icon>mdi-clipboard-plus-outline</v-icon>
     </v-btn>

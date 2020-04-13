@@ -1,7 +1,6 @@
 <template>
   <div>
-    <div id="chart_div">Test</div>
-    <List v-if="delivered" :transactions="transactions" />
+    <List v-if="delivered" :transactions="transactions"  />
   </div>
 </template>
 
@@ -49,7 +48,8 @@ export default {
     dateQuery(days) {
       let today = new Date();
       return new Date().setDate(today.getDate()-days)
-    }
+    },
+
   }
 };
 </script>

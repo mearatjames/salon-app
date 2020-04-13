@@ -27,9 +27,6 @@ export default {
         this.$emit("deselectService", this.service);
       }
     },
-    reset() {
-      this.selected = false;
-    }
   }
 };
 </script>
