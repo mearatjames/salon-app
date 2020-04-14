@@ -53,7 +53,6 @@
     <v-skeleton-loader ref="skeleton" :type="type" :tile="tile" class="mx-auto"></v-skeleton-loader>
     <v-skeleton-loader ref="skeleton" :type="type" :tile="tile" class="mx-auto"></v-skeleton-loader>
     <v-skeleton-loader ref="skeleton" :type="type" :tile="tile" class="mx-auto"></v-skeleton-loader>
-    <v-skeleton-loader ref="skeleton" :type="type" :tile="tile" class="mx-auto"></v-skeleton-loader>
   </div>
 </template>
 
@@ -78,14 +77,14 @@ export default {
     snackbarText: null,
     delivered: false,
     transactions: {},
-    user: JSON.parse(localStorage.getItem("user")).email
+    user: JSON.parse(localStorage.getItem("user"))
   }),
   mounted() {
     this.types = Object.keys(this.$refs.skeleton.rootTypes);
   },
   created() {
     db.collection("transactions")
-      .where("user", "==", db.collection("users").doc(this.user))
+      .where("user", "==", db.collection("users").doc(this.user.email))
       .where("date", ">=", new Date(this.dateQuery(30)))
       .orderBy("date", "desc")
       .get()
@@ -93,6 +92,7 @@ export default {
         querySnapshot.forEach(doc => {
           let data = doc.data();
           let groupDate = data.date.toDate().toLocaleDateString();
+          console.log(data.date.toDate(), groupDate)
           let transaction = {
             id: doc.id,
             date: data.date.toDate(),
@@ -100,6 +100,7 @@ export default {
             tips: data.tips,
             service: data.service
           };
+
           if (groupDate in this.transactions) {
             this.transactions[groupDate].unshift(transaction);
           } else {

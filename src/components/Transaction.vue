@@ -263,6 +263,8 @@ export default {
       Object.keys(this.services)
         .filter(key => this.services[key])
         .forEach(e => (service[e] = true));
+        console.log(this.date)
+        console.log(new Date(this.date))
       let data = {
           date: new Date(this.date),
           price: parseFloat(this.price),

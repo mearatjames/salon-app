@@ -5,17 +5,12 @@
       color="yellow darken-4"
       dark
     >
-      <div class="d-flex align-center">
-        <v-img
-          alt="Vuetify Logo"
-          class="shrink mr-2"
-          contain
-          src="https://cdn.vuetifyjs.com/images/logos/vuetify-logo-dark.png"
-          transition="scale-transition"
-          width="40"
-        />
+      <div v-if="isLoggedIn" class="d-flex align-center user">
+        <v-avatar size="36" color='blue darken-2'>
+      <v-icon dark>mdi-account-circle</v-icon>
+    </v-avatar>
+      <p class="title">{{this.user.name}} </p>
       </div>
-      <p class="title">Salon App</p>
       <v-spacer></v-spacer>
 
       <v-btn v-if="isLoggedIn" v-on:click="logout" depressed text medium>Logout</v-btn>
@@ -23,7 +18,7 @@
     <v-content>
       <router-view/>
     </v-content>
-    <BottomNav/>
+    <BottomNav />
   </v-app>
 </template>
 
@@ -41,11 +36,13 @@ export default {
   data: () => ({
     isLoggedIn: false ,
     currentUser: false,
+    user: null,
   }),
   created() {
     if (firebase.auth().currentUser) {
       this.isLoggedIn = true;
       this.currentUser = firebase.auth().currentUser.email;
+      this.user = JSON.parse(localStorage.getItem("user"))
     }
   },
   methods: {
@@ -69,7 +66,8 @@ export default {
   body {
     overflow-x: hidden;
   }
-  .title {
+  .user p.title {
     margin-bottom: 0;
+    padding-left: 5px;
   }
 </style>

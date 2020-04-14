@@ -8,7 +8,13 @@
       </v-card-title>
       <v-card-title class="headline">AiAi Salon App</v-card-title>
       <v-card-text>
-        <v-form v-model="valid">
+        <div v-if="progress" class="text-center progress-card">
+            <v-card height=250 class="progress">
+              <p>Logging In</p>
+              <v-progress-linear color="deep-purple accent-4" indeterminate rounded height="6"></v-progress-linear>
+            </v-card>
+        </div>
+        <v-form v-else v-model="valid">
           <v-container>
             <v-row>
               <v-col>
@@ -41,6 +47,7 @@
                 class="login-btn"
                 v-on:click="login"
                 rounded
+                type='submit'
                 color="yellow darken-4"
                 dark
               >Login</v-btn>
@@ -69,6 +76,7 @@ export default {
       email: "",
       password: "",
       valid: false,
+      progress: false,
       passwordRules: [v => !!v || "Password is required"],
       emailRules: [
         v => !!v || "E-mail is required",
@@ -79,6 +87,7 @@ export default {
   methods: {
     login: function(e) {
       e.preventDefault();
+      this.progress = true
       firebase
         .auth()
         .signInWithEmailAndPassword(this.email, this.password)
@@ -88,17 +97,19 @@ export default {
               .doc(data.user.email)
               .get()
               .then(querySnapshot => {
+                console.log(querySnapshot.data())
                 localStorage.setItem(
                   "user",
                   JSON.stringify({
                     email: data.user.email,
-                    name: querySnapshot.data().firstname
+                    name: querySnapshot.data().firstname,
                   })
                 );
                 location.reload(true);
               });
           },
           () => {
+            this.progress = false;
             this.snackbar = true;
           }
         );
@@ -111,9 +122,16 @@ export default {
 .login {
   margin-top: 50px;
   padding-top: 20px;
+  margin-bottom: 50px;
 }
 .headline {
   justify-content: center;
   padding-bottom: 0;
+}
+.progress-card {
+  margin-top: 20px;
+}
+.progress {
+  padding: 80px 40px;
 }
 </style>
