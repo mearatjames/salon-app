@@ -97,7 +97,6 @@ export default {
               .doc(data.user.email)
               .get()
               .then(querySnapshot => {
-                console.log(querySnapshot.data())
                 localStorage.setItem(
                   "user",
                   JSON.stringify({

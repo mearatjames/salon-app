@@ -216,7 +216,7 @@ export default {
     if (this.transaction !== undefined && this.transaction !== null) {
       this.price = this.transaction.price;
       this.tips = this.transaction.tips;
-      this.date = this.transaction.date.toLocaleDateString("fr-CA");
+      this.date = this.transaction.date.toLocaleDateString('fr-CA', {timeZone: 'UTC'});
       for (const service in this.transaction.service) {
         this.services[service] = this.transaction.service[service];
       }
@@ -246,7 +246,6 @@ export default {
       }
       db.collection('transactions').doc(this.transaction.id).delete()
       .then(() => {
-        console.log('Successfully deleted the document')
         this.$emit("deleted", deleteItem);
       })
       .catch((error) => console.log("Error removing document: ", error))
@@ -263,8 +262,6 @@ export default {
       Object.keys(this.services)
         .filter(key => this.services[key])
         .forEach(e => (service[e] = true));
-        console.log(this.date)
-        console.log(new Date(this.date))
       let data = {
           date: new Date(this.date),
           price: parseFloat(this.price),
@@ -272,12 +269,10 @@ export default {
           user: db.doc(`/users/${this.user}`),
           service
       }
-      console.log(service);
       if (this.modify) {
         db.collection("transactions").doc(this.transaction.id)
         .set(data)
-        .then((response) => {
-          console.log("Document updated with ID: ", response);
+        .then(() => {
           this.cleanup()
           this.$emit("updated", {data: data, id:this.transaction.id});
         })
@@ -289,9 +284,8 @@ export default {
       } else {
         db.collection("transactions")
           .add(data)
-          .then(docRef => {
+          .then(() => {
             this.cleanup();
-            console.log("Document written with ID: ", docRef.id);
           })
           .catch(error => {
             this.progress = false;

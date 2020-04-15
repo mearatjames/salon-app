@@ -91,8 +91,7 @@ export default {
       .then(querySnapshot => {
         querySnapshot.forEach(doc => {
           let data = doc.data();
-          let groupDate = data.date.toDate().toLocaleDateString();
-          console.log(data.date.toDate(), groupDate)
+          let groupDate = new Intl.DateTimeFormat('en-US', {timeZone: 'UTC'}).format(data.date.toDate());
           let transaction = {
             id: doc.id,
             date: data.date.toDate(),
@@ -120,7 +119,6 @@ export default {
       this.active = true;
     },
     deleted(deleteItem) {
-      console.log(deleteItem);
       if (this.transactions[deleteItem.date].length == 1) {
         delete this.transactions[deleteItem.date];
       } else {
@@ -136,7 +134,7 @@ export default {
       this.active = false;
     },
     updated(transaction) {
-      this.transactions[transaction.data.date.toLocaleDateString()].forEach(item => {
+      this.transactions[new Intl.DateTimeFormat('en-US', {timeZone: 'UTC'}).format(transaction.data.date)].forEach(item => {
         if (item.id === transaction.id) {
           item.id = transaction.id;
           item.price = transaction.data.price;
