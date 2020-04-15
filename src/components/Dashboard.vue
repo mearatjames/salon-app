@@ -1,7 +1,18 @@
 <template>
-  <div>
-   <v-subheader >MONTHLY SNAPSHOT</v-subheader>
+  <div >
+    <div class="snapshot">
 
+    <DoughnutChart>
+
+    </DoughnutChart>
+    <div class="total-snapshot">
+
+    <p >Total: $600</p>
+    </div>
+    </div>
+    <v-sheet color="grey lighten-3">
+   <v-subheader >MONTHLY SNAPSHOT</v-subheader>
+    <v-sheet >
       <v-list-item
         v-for="item in items2"
         :key="item.title"
@@ -24,16 +35,23 @@
           </v-btn>
         </v-list-item-action>
       </v-list-item>
+     </v-sheet>
+     <v-subheader>WEEKLY TRENDS</v-subheader>
+     <BarChart></BarChart>
+     </v-sheet>
   </div>
 </template>
 
 <script>
 // import db from "./firebaseInit";
+import BarChart from './BarChart'
+import DoughnutChart from './DoughnutChart'
 
 export default {
   name: "Dashboard",
   components: {
-    
+    BarChart,
+    DoughnutChart
   },
   data: () => ({
     delivered: false,
@@ -82,5 +100,13 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
+  .total-snapshot {
+    position: relative; 
+    text-align: center;
+    bottom: 50%;
+  }
+  .snapshot {
+    height: 420px;
+  }
 </style>
