@@ -1,0 +1,22 @@
+{
+  "short_name": "AiAi Salon",
+  "name": "AiAi Salon App",
+  "description": "AiAi Salon App for tracking and generating transactions",
+  "icons": [
+    {
+      "src": "/apple-icon.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "/apple-icon.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ],
+  "start_url": "/",
+  "background_color": "#F73A89",
+  "display": "standalone",
+  "scope": "/",
+  "theme_color": "#3367D6"
+}
