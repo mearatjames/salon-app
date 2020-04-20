@@ -9,6 +9,11 @@
       v-on:updated="updated"
     ></Transaction>
     <v-list v-else two-line subheader>
+      <v-select
+          :items="items"
+          v-model="month"
+          solo
+        ></v-select>
       <template v-for="(tdate, date) in transactions">
         <v-subheader :key="date">
           <strong>{{date}}</strong>
@@ -66,6 +71,8 @@ export default {
     Transaction
   },
   data: () => ({
+    month: 'April',
+    items: ['April', 'March', 'Feb'],
     tile: false,
     type: "list-item-avatar-three-line",
     types: [],

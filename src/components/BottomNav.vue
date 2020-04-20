@@ -26,5 +26,7 @@ export default {
 <style>
 .v-item-group.v-bottom-navigation .v-btn.v-size--default {
   height: inherit;
+  justify-content: flex-end;
+  padding-top: 2px;
 }
 </style>
