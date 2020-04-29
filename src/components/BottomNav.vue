@@ -9,7 +9,7 @@
       <v-icon>mdi-clipboard-plus-outline</v-icon>
     </v-btn>
     <v-btn to="/list" exact>
-      <span>List test</span>
+      <span>List</span>
       <v-icon>mdi-view-list</v-icon>
     </v-btn>
   </v-bottom-navigation>
