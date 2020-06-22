@@ -186,7 +186,7 @@ export default {
         this.delivered = false;
         let maxMonth = new Date(this.date)
         maxMonth.setMonth(maxMonth.getMonth() + 1)
-        db.collection("transactions")
+      db.collection("transactions")
       .where("user", "==", db.collection("users").doc(this.user.email))
       .where("date", ">=", new Date(this.date))
       .where("date", "<", maxMonth)
