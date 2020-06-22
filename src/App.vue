@@ -37,6 +37,7 @@ export default {
     isLoggedIn: false ,
     currentUser: false,
     user: null,
+    test: null
   }),
   created() {
     if (firebase.auth().currentUser) {

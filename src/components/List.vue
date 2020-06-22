@@ -8,12 +8,37 @@
       v-on:deleted="deleted"
       v-on:updated="updated"
     ></Transaction>
+    
     <v-list v-else two-line subheader>
-      <v-select
-          :items="items"
-          v-model="month"
-          solo
-        ></v-select>
+      <v-menu
+        ref="menu"
+        v-model="menu"
+        :close-on-content-click="false"
+        transition="scale-transition"
+        offset-y
+        max-width="290px"
+        min-width="290px"
+      >
+        <template v-slot:activator="{ on, attrs }">
+          <v-text-field
+            :value="formatMonth"
+            prepend-icon="event"
+            v-bind="attrs"
+            v-on="on"
+            readonly
+          ></v-text-field>
+        </template>
+        <v-date-picker
+          v-model="date"
+          type="month"
+          no-title
+          scrollable
+          :max="new Date().toLocaleDateString('fr-CA')"
+          @input="menu = false"
+          @change="updateList()"
+        >
+        </v-date-picker>
+      </v-menu>
       <template v-for="(tdate, date) in transactions">
         <v-subheader :key="date">
           <strong>{{date}}</strong>
@@ -71,8 +96,9 @@ export default {
     Transaction
   },
   data: () => ({
-    month: 'April',
-    items: ['April', 'March', 'Feb'],
+    date: new Date().toISOString().substr(0, 7),
+    menu: false,
+    modal: false,
     tile: false,
     type: "list-item-avatar-three-line",
     types: [],
@@ -86,13 +112,29 @@ export default {
     transactions: {},
     user: JSON.parse(localStorage.getItem("user"))
   }),
+  computed: {
+    formatMonth() {
+      return this.date ? new Intl.DateTimeFormat('en-US', {month: 'long', year: 'numeric'}).format(new Date(this.date)) : ''
+    }
+  },
   mounted() {
     this.types = Object.keys(this.$refs.skeleton.rootTypes);
   },
   created() {
+    // this.month = new Intl.DateTimeFormat('en-US', {month: 'long', year: 'numeric'}).format(new Date())
+    // let listDate = new Date()
+    // for (let i = 0; i < 5; i++) {
+    //   listDate.setMonth(listDate.getMonth() - 1)
+    //   this.items.push(new Intl.DateTimeFormat('en-US', {month: 'long', year: 'numeric'}).format(listDate)) 
+    // }
+    // console.log(this.items)
+    // console.log(listDate)
+    // console.log(new Date(this.month))
+
     db.collection("transactions")
       .where("user", "==", db.collection("users").doc(this.user.email))
-      .where("date", ">=", new Date(this.dateQuery(30)))
+      .where("date", ">=", new Date(this.date))
+      // .where("date", "<", new Date(this.month).setMonth(new Date(this.month + 1)))
       .orderBy("date", "desc")
       .get()
       .then(querySnapshot => {
@@ -103,7 +145,7 @@ export default {
             id: doc.id,
             date: data.date.toDate(),
             price: data.price,
-            tips: data.tips,
+            tips: data.tips || 0,
             service: data.service
           };
 
@@ -139,6 +181,37 @@ export default {
     },
     back() {
       this.active = false;
+    },
+    updateList() {
+        this.delivered = false;
+        let maxMonth = new Date(this.date)
+        maxMonth.setMonth(maxMonth.getMonth() + 1)
+        db.collection("transactions")
+      .where("user", "==", db.collection("users").doc(this.user.email))
+      .where("date", ">=", new Date(this.date))
+      .where("date", "<", maxMonth)
+      .orderBy("date", "desc")
+      .get()
+      .then(querySnapshot => {
+        this.transactions = {}
+        querySnapshot.forEach(doc => {
+          let data = doc.data();
+          let groupDate = new Intl.DateTimeFormat('en-US', {timeZone: 'UTC'}).format(data.date.toDate());
+          let transaction = {
+            id: doc.id,
+            date: data.date.toDate(),
+            price: data.price,
+            tips: data.tips || 0,
+            service: data.service
+          };
+          if (groupDate in this.transactions) {
+            this.transactions[groupDate].unshift(transaction);
+          } else {
+            this.transactions[groupDate] = new Array(transaction);
+          }
+        });
+        this.delivered = true;
+      });
     },
     updated(transaction) {
       this.transactions[new Intl.DateTimeFormat('en-US', {timeZone: 'UTC'}).format(transaction.data.date)].forEach(item => {

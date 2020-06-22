@@ -8,7 +8,6 @@ import './registerServiceWorker'
 
 Vue.config.productionTip = false
 
-
 let app;
 firebase.auth().onAuthStateChanged(function() {
   if (!app) {
