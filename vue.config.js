@@ -13,5 +13,5 @@ module.exports = {
 
   pwa: {
     name: 'AiAi Salon'
-  }
+  },
 }

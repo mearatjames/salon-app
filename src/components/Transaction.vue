@@ -50,6 +50,7 @@
             <v-date-picker
               color="yellow darken-4"
               v-model="date"
+              :reactive="true"
               :max="new Date().toLocaleDateString('fr-CA')"
               no-title
             ></v-date-picker>
@@ -189,7 +190,7 @@ export default {
       return {
         date: this.dateFormatted,
         price: this.price,
-        tips: this.tips,
+        tips: this.tips || 0,
         service: Object.keys(this.services)
           .filter(key => this.services[key])
           .join(", ")
@@ -215,7 +216,7 @@ export default {
   created() {
     if (this.transaction !== undefined && this.transaction !== null) {
       this.price = this.transaction.price;
-      this.tips = this.transaction.tips;
+      this.tips = this.transaction.tips || 0;
       this.date = this.transaction.date.toLocaleDateString('fr-CA', {timeZone: 'UTC'});
       for (const service in this.transaction.service) {
         this.services[service] = this.transaction.service[service];
@@ -265,7 +266,7 @@ export default {
       let data = {
           date: new Date(this.date),
           price: parseFloat(this.price),
-          tips: parseFloat(this.tips),
+          tips: parseFloat(this.tips) || 0,
           user: db.doc(`/users/${this.user}`),
           service
       }
