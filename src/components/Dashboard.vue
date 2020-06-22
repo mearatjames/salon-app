@@ -151,7 +151,7 @@ export default {
   created() {
         db.collection("transactions")
           .where("user", "==", db.collection("users").doc(this.user.email))
-          .where("date", ">=", new Date(new Intl.DateTimeFormat('en-US', {month: 'long', year: 'numeric'}).format(new Date())))
+          .where("date", ">=", new Date(new Intl.DateTimeFormat('en-US', {month: 'long', year: 'numeric'}).format(this.date)))
           .orderBy('date', 'desc')
           .get()
           .then(querySnapshot => {
