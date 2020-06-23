@@ -9,7 +9,7 @@
       v-on:updated="updated"
     ></Transaction>
     
-    <v-list v-else two-line subheader>
+    <v-list class="px-2" v-else two-line subheader>
       <v-menu
         ref="menu"
         v-model="menu"
@@ -39,6 +39,15 @@
         >
         </v-date-picker>
       </v-menu>
+      <v-alert
+      outlined
+      icon="mdi-google-downasaur"
+      prominent
+      border="left"
+      v-if="empty"
+    >
+      <div class="title">No Transaction Found</div>
+    </v-alert>
       <template v-for="(tdate, date) in transactions">
         <v-subheader :key="date">
           <strong>{{date}}</strong>
@@ -109,6 +118,7 @@ export default {
     snackbar: false,
     snackbarText: null,
     delivered: false,
+    empty: null,
     transactions: {},
     user: JSON.parse(localStorage.getItem("user"))
   }),
@@ -130,7 +140,6 @@ export default {
     // console.log(this.items)
     // console.log(listDate)
     // console.log(new Date(this.month))
-
     db.collection("transactions")
       .where("user", "==", db.collection("users").doc(this.user.email))
       .where("date", ">=", new Date(this.date))
@@ -138,25 +147,34 @@ export default {
       .orderBy("date", "desc")
       .get()
       .then(querySnapshot => {
-        querySnapshot.forEach(doc => {
-          let data = doc.data();
-          let groupDate = new Intl.DateTimeFormat('en-US', {timeZone: 'UTC'}).format(data.date.toDate());
-          let transaction = {
-            id: doc.id,
-            date: data.date.toDate(),
-            price: data.price,
-            tips: data.tips || 0,
-            service: data.service
-          };
+        if (!querySnapshot.empty) {
 
-          if (groupDate in this.transactions) {
-            this.transactions[groupDate].unshift(transaction);
-          } else {
-            this.transactions[groupDate] = new Array(transaction);
-          }
-        });
+          querySnapshot.forEach(doc => {
+            let data = doc.data();
+            let groupDate = new Intl.DateTimeFormat('en-US', {timeZone: 'UTC'}).format(data.date.toDate());
+            let transaction = {
+              id: doc.id,
+              date: data.date.toDate(),
+              price: data.price,
+              tips: data.tips || 0,
+              service: data.service
+            };
+  
+            if (groupDate in this.transactions) {
+              this.transactions[groupDate].unshift(transaction);
+            } else {
+              this.transactions[groupDate] = new Array(transaction);
+            }
+          });
+        } else {
+          console.log('Empty')
+          this.empty = true
+        }
         this.delivered = true;
-      });
+      })
+      .catch(error => {
+        console.error(error)
+      })
   },
   methods: {
     dateQuery(days) {
@@ -183,6 +201,7 @@ export default {
       this.active = false;
     },
     updateList() {
+        this.empty = false
         this.delivered = false;
         let maxMonth = new Date(this.date)
         maxMonth.setMonth(maxMonth.getMonth() + 1)
@@ -194,24 +213,34 @@ export default {
       .get()
       .then(querySnapshot => {
         this.transactions = {}
-        querySnapshot.forEach(doc => {
-          let data = doc.data();
-          let groupDate = new Intl.DateTimeFormat('en-US', {timeZone: 'UTC'}).format(data.date.toDate());
-          let transaction = {
-            id: doc.id,
-            date: data.date.toDate(),
-            price: data.price,
-            tips: data.tips || 0,
-            service: data.service
-          };
-          if (groupDate in this.transactions) {
-            this.transactions[groupDate].unshift(transaction);
-          } else {
-            this.transactions[groupDate] = new Array(transaction);
-          }
-        });
+        console.log(querySnapshot)
+        if (!querySnapshot.empty) {
+
+          querySnapshot.forEach(doc => {
+            let data = doc.data();
+            let groupDate = new Intl.DateTimeFormat('en-US', {timeZone: 'UTC'}).format(data.date.toDate());
+            let transaction = {
+              id: doc.id,
+              date: data.date.toDate(),
+              price: data.price,
+              tips: data.tips || 0,
+              service: data.service
+            };
+            if (groupDate in this.transactions) {
+              this.transactions[groupDate].unshift(transaction);
+            } else {
+              this.transactions[groupDate] = new Array(transaction);
+            }
+          });
+        } else {
+          console.log('Empty')
+          this.empty = true
+        }
         this.delivered = true;
-      });
+      })
+      .catch(error => {
+        console.error(error)
+      })
     },
     updated(transaction) {
       this.transactions[new Intl.DateTimeFormat('en-US', {timeZone: 'UTC'}).format(transaction.data.date)].forEach(item => {

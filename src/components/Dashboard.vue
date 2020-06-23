@@ -11,6 +11,7 @@
       >
         <template v-slot:activator="{ on, attrs }">
           <v-text-field
+            class="px-5"
             :value="formatMonth"
             prepend-icon="event"
             v-bind="attrs"
