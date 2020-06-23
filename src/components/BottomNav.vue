@@ -1,5 +1,5 @@
 <template>
-  <v-bottom-navigation class="d-flex d-lg-none" height="70px" app grow fixed color="yellow darken-4">
+  <v-bottom-navigation class="d-flex d-lg-none" height="70px" app grow fixed color="teal">
     <v-btn to="/" exact>
       <span>Dashboard</span>
       <v-icon>mdi-chart-line</v-icon>

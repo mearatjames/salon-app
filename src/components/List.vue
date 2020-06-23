@@ -9,7 +9,7 @@
       v-on:updated="updated"
     ></Transaction>
     
-    <v-list class="px-2" v-else two-line subheader>
+    <v-list v-else two-line subheader>
       <v-menu
         ref="menu"
         v-model="menu"
@@ -21,6 +21,7 @@
       >
         <template v-slot:activator="{ on, attrs }">
           <v-text-field
+            class="px-5"
             :value="formatMonth"
             prepend-icon="event"
             v-bind="attrs"
@@ -39,15 +40,17 @@
         >
         </v-date-picker>
       </v-menu>
-      <v-alert
-      outlined
-      icon="mdi-google-downasaur"
-      prominent
-      border="left"
-      v-if="empty"
-    >
-      <div class="title">No Transaction Found</div>
-    </v-alert>
+      <div class="px-5">
+        <v-alert
+        outlined
+        icon="mdi-google-downasaur"
+        prominent
+        border="left"
+        v-if="empty"
+      >
+        <div class="title">No Transaction Found</div>
+      </v-alert>
+      </div>
       <template v-for="(tdate, date) in transactions">
         <v-subheader :key="date">
           <strong>{{date}}</strong>
@@ -55,7 +58,7 @@
         <template v-for="(transaction, index) in tdate">
           <v-list-item @click="edit(transaction)" :key="date + index">
             <v-list-item-avatar>
-              <v-avatar color="yellow darken-4" size="30">
+              <v-avatar color="teal" size="30">
                 <span class="white--text title">{{index + 1}}</span>
               </v-avatar>
             </v-list-item-avatar>

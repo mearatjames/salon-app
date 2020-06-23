@@ -3,7 +3,7 @@
     @click="select"
     class="ma-2"
     light
-    :color="selected ? 'yellow darken-4' : null"
+    :color="selected ? 'teal' : null"
     :text-color="selected ? 'white' : null"
   >{{service}}</v-chip>
 </template>

@@ -26,7 +26,7 @@
           <template v-else>
           <v-menu
             ref="datePicker"
-            color="yellow darken-4"
+            color="teal"
             v-model="datePicker"
             :close-on-content-click="true"
             transition="scale-transition"
@@ -37,7 +37,7 @@
             <template v-slot:activator="{ on }">
               <v-text-field
                 v-model="dateFormatted"
-                color="yellow darken-4"
+                color="teal"
                 label="Date"
                 persistent-hint
                 prepend-icon="event"
@@ -48,7 +48,7 @@
               ></v-text-field>
             </template>
             <v-date-picker
-              color="yellow darken-4"
+              color="teal"
               v-model="date"
               :reactive="true"
               :max="new Date().toLocaleDateString('fr-CA')"
@@ -68,7 +68,7 @@
           </div>
           <v-text-field
             v-model="price"
-            color="yellow darken-4"
+            color="teal"
             prepend-icon="mdi-cash-100"
             label="Price"
             placeholder=" "
@@ -79,7 +79,7 @@
           >{{price}}</v-text-field>
           <v-text-field
             v-model="tips"
-            color="yellow darken-4"
+            color="teal"
             prepend-icon="mdi-hand-heart"
             label="Tips"
             placeholder=" "
@@ -93,7 +93,7 @@
               :disabled="validate == false"
               class="add"
               rounded
-              color="yellow darken-4"
+              color="teal"
               @click="add"
             >{{this.modify ? 'Update' : 'Add Transaction'}}</v-btn>
             <v-btn

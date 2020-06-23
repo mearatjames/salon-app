@@ -2,7 +2,7 @@
   <div>
     <v-card class="mx-auto login" max-width="344" :elevation="12">
       <v-card-title class="headline">
-        <v-avatar color="yellow darken-4">
+        <v-avatar color="teal">
           <v-icon dark>mdi-account-circle</v-icon>
         </v-avatar>
       </v-card-title>
@@ -19,7 +19,7 @@
             <v-row>
               <v-col>
                 <v-text-field
-                  color="yellow darken-4"
+                  color="teal"
                   v-model="email"
                   :rules="emailRules"
                   label="Email"
@@ -33,7 +33,7 @@
                   :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
                   :type="show1 ? 'text' : 'password'"
                   @click:append="show1 = !show1"
-                  color="yellow darken-4"
+                  color="teal"
                   v-model="password"
                   :rules="passwordRules"
                   label="Password"
@@ -48,7 +48,7 @@
                 v-on:click="login"
                 rounded
                 type='submit'
-                color="yellow darken-4"
+                color="teal"
                 dark
               >Login</v-btn>
             </v-row>
