@@ -320,10 +320,10 @@ export default {
   padding: 20px;
 }
 .title-edit {
-  background-color: tomato;
+  background-color: rgb(81, 186, 36);
 }
 .title-add {
-  background-color: rgb(239, 163, 20);
+  background-color: rgb(16, 172, 131);
 }
 .transaction-card {
   width: 90%;

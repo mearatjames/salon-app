@@ -17,11 +17,11 @@
     </v-app-bar>
     <NavDrawer></NavDrawer>
     <v-main>
-      <v-container fluid>
+
         <v-content>
           <router-view></router-view>
         </v-content>
-    </v-container>
+
     </v-main>
     <BottomNav />
   </v-app>
