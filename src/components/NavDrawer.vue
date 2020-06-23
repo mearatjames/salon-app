@@ -1,5 +1,5 @@
 <template>
-    <v-navigation-drawer color='teal' dark app>
+    <v-navigation-drawer color='teal' dark app :permanent="$vuetify.breakpoint.mdAndUp">
       <v-list-item>
         <v-list-item-content>
           <v-list-item-title class="title">

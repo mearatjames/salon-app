@@ -16,13 +16,13 @@
       <v-btn v-if="isLoggedIn" v-on:click="logout" depressed text medium>Logout</v-btn>
     </v-app-bar>
     <NavDrawer></NavDrawer>
-    <v-main>
-
+      <div class="padding">
         <v-content>
           <router-view></router-view>
         </v-content>
 
-    </v-main>
+      </div>
+
     <BottomNav />
   </v-app>
 </template>
@@ -77,5 +77,10 @@ export default {
   .user p.title {
     margin-bottom: 0;
     padding-left: 5px;
+  }
+  @media only screen and (max-width: 1068px) {
+    .padding {
+      padding-bottom: 70px;
+    }
   }
 </style>
