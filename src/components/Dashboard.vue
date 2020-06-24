@@ -44,7 +44,8 @@
     <v-sheet color="grey lighten-3">
    <v-subheader >MONTHLY SNAPSHOT</v-subheader>
     <v-sheet >
-       <v-list-item>
+      <v-list>
+        <v-list-item>
         <v-list-item-avatar>
           <v-icon
             class="amber white--text"
@@ -56,27 +57,60 @@
           <v-list-item-title>{{total.customer}}</v-list-item-title>
         </v-list-item-content>
       </v-list-item>
-
-      <v-list-item>
+       <v-list-item>
         <v-list-item-avatar>
           <v-icon
-            class="green white--text"
+            class="teal white--text"
           >mdi-cash-multiple</v-icon>
         </v-list-item-avatar>
 
         <v-list-item-content>
-          <v-list-item-subtitle>My Split</v-list-item-subtitle>
+          <v-list-item-subtitle>Total</v-list-item-subtitle>
+          <v-list-item-title>{{new Intl.NumberFormat('en-US', {
+  style: 'currency',
+  currency: 'USD',
+}).format(total.beforeSplit)}}</v-list-item-title>
+        </v-list-item-content>
+      </v-list-item>
+      <v-list-group
+        no-action
+        color='teal'
+        @click="slider = split"
+      >
+        <template v-slot:activator>
+          <v-list-item-avatar>
+          <v-icon
+            class="green white--text"
+          >mdi-cash</v-icon>
+        </v-list-item-avatar>
+         <v-list-item-content>
+          <v-list-item-subtitle>My Split ({{split}}%)</v-list-item-subtitle>
           <v-list-item-title>{{new Intl.NumberFormat('en-US', {
   style: 'currency',
   currency: 'USD',
 }).format(total.mySplit)}}</v-list-item-title>
         </v-list-item-content>
-        <v-list-item-action>
-          <v-btn icon>
-            <v-icon color="grey lighten-1">mdi-information</v-icon>
-          </v-btn>
-        </v-list-item-action>
-      </v-list-item>
+        </template>
+
+        <v-list-item class="padding"
+        >
+          <v-list-item-content>
+        <div class="my-2">
+        <v-btn @click="updateSplit()" :disabled="slider == split" color='teal' class="update" small>Update</v-btn>
+      </div>
+            <v-slider
+          v-model="slider"
+          thumb-label="always"
+          track-color="amber"
+          color='teal'
+        >
+        <template v-slot:thumb-label="{ value }">
+            {{ value }}%
+          </template>
+        </v-slider>
+          </v-list-item-content>
+        </v-list-item>
+      </v-list-group>
       <v-list-item>
         <v-list-item-avatar>
           <v-icon
@@ -96,7 +130,7 @@
         <v-list-item-avatar>
           <v-icon
             class="red white--text"
-          >mdi-cash-100</v-icon>
+          >mdi-cash-plus</v-icon>
         </v-list-item-avatar>
 
         <v-list-item-content>
@@ -107,7 +141,7 @@
 }).format(total.mySplit + total.tips)}}</v-list-item-title>
         </v-list-item-content>
       </v-list-item>
-     
+      </v-list>
      </v-sheet>
      <!-- <v-subheader>WEEKLY TRENDS</v-subheader>
      <BarChart></BarChart> -->
@@ -128,6 +162,8 @@ export default {
   data: () => ({
     delivered: false,
     menu: false,
+    split: 0,
+    slider: 0,
     date: new Date().toISOString().substr(0, 7),
     total: {
       tips: 0,
@@ -137,12 +173,6 @@ export default {
       customer: 0
     },
     user: JSON.parse(localStorage.getItem("user")),
-    items: [
-        { icon: 'assignment', iconClass: 'blue white--text', title: '$400', subtitle: 'Tips' },
-        { icon: 'call_to_action', iconClass: 'amber white--text', title: '20 Customers', subtitle: 'Count' },
-        { icon: 'call_to_action', iconClass: 'amber white--text', title: '$4,500', subtitle: 'Gross Revenue' },
-        { icon: 'call_to_action', iconClass: 'amber white--text', title: '$3,000', subtitle: 'Income After Split' },
-      ],
   }),
   computed: {
     formatMonth() {
@@ -150,6 +180,12 @@ export default {
     }
   },
   created() {
+        db.collection('users').doc(this.user.email)
+          .get()
+          .then(querySnapshot => {
+            this.split = querySnapshot.data().split
+            this.slider = querySnapshot.data().split
+          })
         db.collection("transactions")
           .where("user", "==", db.collection("users").doc(this.user.email))
           .where("date", ">=", new Date(this.date))
@@ -162,40 +198,48 @@ export default {
               this.total.beforeSplit += data.price
               this.total.customer++
             })
-            this.total.mySplit = Math.round(this.total.beforeSplit * 0.6)
+            this.total.mySplit = Math.round(this.total.beforeSplit * this.split * 0.01)
             this.total.salonSplit = this.total.beforeSplit - this.total.mySplit
           }
           )
   },
   methods: {
-  updateList() {
-        this.total = {
-      tips: 0,
-      beforeSplit: 0,
-      mySplit: 0,
-      salonSplit: 0,
-      customer: 0
-    }
-        let maxMonth = new Date(this.date)
-        maxMonth.setMonth(maxMonth.getMonth() + 1)
-      db.collection("transactions")
-      .where("user", "==", db.collection("users").doc(this.user.email))
-      .where("date", ">=", new Date(this.date))
-      .where("date", "<", maxMonth)
-      .orderBy("date", "desc")
-      .get()
-      .then(querySnapshot => {
-        querySnapshot.forEach(doc => {
-              let data = doc.data()
-              this.total.tips += data.tips
-              this.total.beforeSplit += data.price
-              this.total.customer++
-            })
-            this.total.mySplit = Math.round(this.total.beforeSplit * 0.6)
-            this.total.salonSplit = this.total.beforeSplit - this.total.mySplit
-          });
+    updateSplit() {
+      db.collection('users').doc(this.user.email)
+        .set({split: this.slider}, { merge: true })
+        .then(() => {
+          this.split = this.slider
+          this.total.mySplit = Math.round(this.total.beforeSplit * this.split * 0.01)
+        })
     },
-  }
+    updateList() {
+          this.total = {
+        tips: 0,
+        beforeSplit: 0,
+        mySplit: 0,
+        salonSplit: 0,
+        customer: 0
+      }
+          let maxMonth = new Date(this.date)
+          maxMonth.setMonth(maxMonth.getMonth() + 1)
+        db.collection("transactions")
+        .where("user", "==", db.collection("users").doc(this.user.email))
+        .where("date", ">=", new Date(this.date))
+        .where("date", "<", maxMonth)
+        .orderBy("date", "desc")
+        .get()
+        .then(querySnapshot => {
+          querySnapshot.forEach(doc => {
+                let data = doc.data()
+                this.total.tips += data.tips
+                this.total.beforeSplit += data.price
+                this.total.customer++
+              })
+              this.total.mySplit = Math.round(this.total.beforeSplit * this.split * 0.01)
+              this.total.salonSplit = this.total.beforeSplit - this.total.mySplit
+            });
+      },
+    }
 };
 </script>
 
@@ -207,5 +251,13 @@ export default {
   }
   .snapshot {
     height: 420px;
+  }
+  .update {
+    color: white;
+  }
+  @media only screen and (max-width: 1068px) {
+  .v-application--is-ltr .v-list-group--no-action > .v-list-group__items > .v-list-item {
+    padding: 0 10px;
+  }
   }
 </style>
