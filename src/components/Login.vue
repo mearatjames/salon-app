@@ -11,7 +11,7 @@
         <div v-if="progress" class="text-center progress-card">
             <v-card height=250 class="progress">
               <p>Logging In</p>
-              <v-progress-linear color="deep-purple accent-4" indeterminate rounded height="6"></v-progress-linear>
+              <v-progress-linear color="teal" indeterminate rounded height="6"></v-progress-linear>
             </v-card>
         </div>
         <v-form v-else v-model="valid">

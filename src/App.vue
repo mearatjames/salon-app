@@ -29,6 +29,7 @@
 
 <script>
 import firebase from 'firebase';
+import db from "./components/firebaseInit";
 import BottomNav from './components/BottomNav';
 import NavDrawer from './components/NavDrawer'
 
@@ -50,7 +51,22 @@ export default {
     if (firebase.auth().currentUser) {
       this.isLoggedIn = true;
       this.currentUser = firebase.auth().currentUser.email;
-      this.user = JSON.parse(localStorage.getItem("user"))
+      if (localStorage.getItem("user")) {
+        this.user = JSON.parse(localStorage.getItem("user"))
+      } else {
+        db.collection("users")
+              .doc(this.currentUser)
+              .get()
+              .then(querySnapshot => {
+                localStorage.setItem(
+                  "user",
+                  JSON.stringify({
+                    email: this.currentUser,
+                    name: querySnapshot.data().firstname,
+                  })
+                );
+              });
+      }
     }
   },
   methods: {

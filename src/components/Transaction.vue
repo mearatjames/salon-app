@@ -108,7 +108,7 @@
               <div v-if="progress" class="text-center">
                 <v-card class="progress">
                   <p>Processing</p>
-                  <v-progress-circular indeterminate :size="70" :width="7" color="red"></v-progress-circular>
+                  <v-progress-circular indeterminate :size="70" :width="7" color="teal"></v-progress-circular>
                 </v-card>
               </div>
               <v-card v-else>
