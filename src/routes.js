@@ -4,7 +4,8 @@ import Dashboard from "./components/Dashboard.vue";
 import Add from "./components/Add.vue";
 import List from "./components/List.vue";
 import Login from "./components/Login.vue";
-import firebase from "firebase";
+import firebase from "firebase/app";
+import 'firebase/auth'
 
 Vue.use(Router);
 

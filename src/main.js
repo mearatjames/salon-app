@@ -2,7 +2,8 @@ import Vue from 'vue'
 import App from './App.vue'
 import vuetify from './plugins/vuetify';
 import router from './routes'
-import firebase from 'firebase';
+import firebase from 'firebase/app';
+import 'firebase/auth'
 import './components/firebaseInit';
 import './registerServiceWorker'
 

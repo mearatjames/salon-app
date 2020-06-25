@@ -170,7 +170,6 @@ export default {
             }
           });
         } else {
-          console.log('Empty')
           this.empty = true
         }
         this.delivered = true;
@@ -216,7 +215,6 @@ export default {
       .get()
       .then(querySnapshot => {
         this.transactions = {}
-        console.log(querySnapshot)
         if (!querySnapshot.empty) {
 
           querySnapshot.forEach(doc => {
@@ -236,7 +234,6 @@ export default {
             }
           });
         } else {
-          console.log('Empty')
           this.empty = true
         }
         this.delivered = true;

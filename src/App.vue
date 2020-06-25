@@ -28,7 +28,8 @@
 </template>
 
 <script>
-import firebase from 'firebase';
+import firebase from 'firebase/app';
+import 'firebase/auth'
 import db from "./components/firebaseInit";
 import BottomNav from './components/BottomNav';
 import NavDrawer from './components/NavDrawer'
