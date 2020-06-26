@@ -27,6 +27,7 @@
             v-bind="attrs"
             v-on="on"
             readonly
+            color="teal"
           ></v-text-field>
         </template>
         <v-date-picker
@@ -34,6 +35,7 @@
           type="month"
           no-title
           scrollable
+          color="teal"
           :max="new Date().toLocaleDateString('fr-CA')"
           @input="menu = false"
           @change="updateList()"
