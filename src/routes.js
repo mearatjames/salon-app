@@ -5,6 +5,7 @@ import Add from "./components/Add.vue";
 import List from "./components/List.vue";
 import Login from "./components/Login.vue";
 import NotFound from "./components/NotFound.vue"
+import Sales from "./components/Sales.vue"
 import firebase from "firebase/app";
 import 'firebase/auth'
 
@@ -32,6 +33,14 @@ let router = new Router({
       path: "/list",
       component: List,
       name: "List",
+      meta: {
+        requiresAuth: true,
+      },
+    },
+    {
+      path: "/sales",
+      component: Sales,
+      name: "Sales",
       meta: {
         requiresAuth: true,
       },
