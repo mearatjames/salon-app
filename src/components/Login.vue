@@ -9,10 +9,10 @@
       <v-card-title class="headline">AiAi Salon App</v-card-title>
       <v-card-text>
         <div v-if="progress" class="text-center progress-card">
-            <v-card height=250 class="progress">
-              <p>Logging In</p>
-              <v-progress-linear color="teal" indeterminate rounded height="6"></v-progress-linear>
-            </v-card>
+          <v-card height="250" class="progress">
+            <p>Logging In</p>
+            <v-progress-linear color="teal" indeterminate rounded height="6"></v-progress-linear>
+          </v-card>
         </div>
         <v-form v-else v-model="valid">
           <v-container>
@@ -47,7 +47,7 @@
                 class="login-btn"
                 v-on:click="login"
                 rounded
-                type='submit'
+                type="submit"
                 color="teal"
                 dark
               >Login</v-btn>
@@ -65,7 +65,7 @@
 
 <script>
 import firebase from "firebase/app";
-import 'firebase/auth'
+import "firebase/auth";
 import db from "./firebaseInit";
 
 export default {
@@ -88,7 +88,7 @@ export default {
   methods: {
     login: function(e) {
       e.preventDefault();
-      this.progress = true
+      this.progress = true;
       firebase
         .auth()
         .signInWithEmailAndPassword(this.email, this.password)
@@ -102,7 +102,7 @@ export default {
                   "user",
                   JSON.stringify({
                     email: data.user.email,
-                    name: querySnapshot.data().firstname,
+                    name: querySnapshot.data().firstname
                   })
                 );
                 location.reload(true);

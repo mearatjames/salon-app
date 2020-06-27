@@ -5,19 +5,15 @@ export default {
   mounted() {
     this.renderChart(
       {
-        labels: [
-          'Tips',
-          'My Split',
-          'Salon Split'
-        ],
+        labels: ["Tips", "My Split", "Salon Split"],
         datasets: [
           {
             data: [60, 40, 30],
-            backgroundColor: ["#3e95cd", "#8e5ea2","#3cba9f"],
-          }
+            backgroundColor: ["#3e95cd", "#8e5ea2", "#3cba9f"],
+          },
         ],
       },
-      { responsive: true, maintainAspectRatio: false, legend: false, }
+      { responsive: true, maintainAspectRatio: false, legend: false }
     );
-  }
+  },
 };

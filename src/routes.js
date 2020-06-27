@@ -4,6 +4,7 @@ import Dashboard from "./components/Dashboard.vue";
 import Add from "./components/Add.vue";
 import List from "./components/List.vue";
 import Login from "./components/Login.vue";
+import NotFound from "./components/NotFound.vue"
 import firebase from "firebase/app";
 import 'firebase/auth'
 
@@ -43,6 +44,8 @@ let router = new Router({
         requiresGuest: true,
       },
     },
+    { path: '/404', component: NotFound },  
+    { path: '*', redirect: '/404' },  
   ],
 });
 
@@ -71,7 +74,7 @@ router.beforeEach((to, from, next) => {
       // Proceed to route
       next();
     }
-  } else {
+  } else  {
     // Proceed to route
     next();
   }

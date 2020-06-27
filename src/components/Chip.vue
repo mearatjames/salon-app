@@ -13,11 +13,10 @@ export default {
   name: "Chip",
   props: {
     service: String,
-    selected: Boolean,
+    selected: Boolean
   },
   data() {
-    return {
-    };
+    return {};
   },
   methods: {
     select() {
@@ -26,7 +25,7 @@ export default {
       } else {
         this.$emit("deselectService", this.service);
       }
-    },
+    }
   }
 };
 </script>

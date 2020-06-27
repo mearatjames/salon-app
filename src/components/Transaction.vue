@@ -4,12 +4,12 @@
       <v-card max-width="450" :elevation="12" class="transaction-card">
         <v-img v-if="modify" class="white--text title-edit align-end" height="80px">
           <div class="title-flex">
-          <v-card-title>Modify Transaction</v-card-title>
-          <v-card-actions>
-          <v-btn @click="$emit('back')" icon color="white">
-              <v-icon>mdi-close</v-icon>
-          </v-btn>
-          </v-card-actions>
+            <v-card-title>Modify Transaction</v-card-title>
+            <v-card-actions>
+              <v-btn @click="$emit('back')" icon color="white">
+                <v-icon>mdi-close</v-icon>
+              </v-btn>
+            </v-card-actions>
           </div>
         </v-img>
         <v-img v-else class="white--text title-add align-end" height="80px">
@@ -24,116 +24,116 @@
             </v-card>
           </div>
           <template v-else>
-          <v-menu
-            ref="datePicker"
-            color="teal"
-            v-model="datePicker"
-            :close-on-content-click="true"
-            transition="scale-transition"
-            offset-y
-            max-width="290px"
-            min-width="290px"
-          >
-            <template v-slot:activator="{ on }">
-              <v-text-field
-                v-model="dateFormatted"
+            <v-menu
+              ref="datePicker"
+              color="teal"
+              v-model="datePicker"
+              :close-on-content-click="true"
+              transition="scale-transition"
+              offset-y
+              max-width="290px"
+              min-width="290px"
+            >
+              <template v-slot:activator="{ on }">
+                <v-text-field
+                  v-model="dateFormatted"
+                  color="teal"
+                  label="Date"
+                  persistent-hint
+                  prepend-icon="event"
+                  inputmode="none"
+                  :disabled="modify == true"
+                  @blur="date = parseDate(dateFormatted)"
+                  v-on="on"
+                ></v-text-field>
+              </template>
+              <v-date-picker
                 color="teal"
-                label="Date"
-                persistent-hint
-                prepend-icon="event"
-                inputmode="none"
-                :disabled="modify == true"
-                @blur="date = parseDate(dateFormatted)"
-                v-on="on"
-              ></v-text-field>
-            </template>
-            <v-date-picker
+                v-model="date"
+                :reactive="true"
+                :max="new Date().toLocaleDateString('fr-CA')"
+                no-title
+              ></v-date-picker>
+            </v-menu>
+            <div class="text-center">
+              <Chip
+                v-for="(value, service) in services"
+                ref="chips"
+                :key="service + value"
+                :service="service"
+                :selected="value"
+                v-on:selectService="addService"
+                v-on:deselectService="removeService"
+              ></Chip>
+            </div>
+            <v-text-field
+              v-model="price"
               color="teal"
-              v-model="date"
-              :reactive="true"
-              :max="new Date().toLocaleDateString('fr-CA')"
-              no-title
-            ></v-date-picker>
-          </v-menu>
-          <div class="text-center">
-            <Chip
-              v-for="(value, service) in services"
-              ref="chips"
-              :key="service + value"
-              :service="service"
-              :selected="value"
-              v-on:selectService="addService"
-              v-on:deselectService="removeService"
-            ></Chip>
-          </div>
-          <v-text-field
-            v-model="price"
-            color="teal"
-            prepend-icon="mdi-cash-100"
-            label="Price"
-            placeholder=" "
-            required
-            prefix="$"
-            type="number"
-            inputmode="decimal"
-          >{{price}}</v-text-field>
-          <v-text-field
-            v-model="tips"
-            color="teal"
-            prepend-icon="mdi-hand-heart"
-            label="Tips"
-            placeholder=" "
-            prefix="$"
-            required
-            type="number"
-            inputmode="decimal"
-          >{{tips}}</v-text-field>
-          <v-row justify="center">
-            <v-btn
-              :disabled="validate == false"
-              class="add"
-              rounded
+              prepend-icon="mdi-cash-100"
+              label="Price"
+              placeholder=" "
+              required
+              prefix="$"
+              type="number"
+              inputmode="decimal"
+            >{{price}}</v-text-field>
+            <v-text-field
+              v-model="tips"
               color="teal"
-              @click="add"
-            >{{this.modify ? 'Update' : 'Add Transaction'}}</v-btn>
-            <v-btn
-              v-if="modify"
-              :disabled="validate == false"
-              class="add"
-              rounded
-              color="red darken-4"
-              @click="del"
-            >Delete</v-btn>
-            <v-dialog v-model="dialog" max-width="350">
-              <div v-if="progress" class="text-center">
-                <v-card class="progress">
-                  <p>Processing</p>
-                  <v-progress-circular indeterminate :size="70" :width="7" color="teal"></v-progress-circular>
+              prepend-icon="mdi-hand-heart"
+              label="Tips"
+              placeholder=" "
+              prefix="$"
+              required
+              type="number"
+              inputmode="decimal"
+            >{{tips}}</v-text-field>
+            <v-row justify="center">
+              <v-btn
+                :disabled="validate == false"
+                class="add"
+                rounded
+                color="teal"
+                @click="add"
+              >{{this.modify ? 'Update' : 'Add Transaction'}}</v-btn>
+              <v-btn
+                v-if="modify"
+                :disabled="validate == false"
+                class="add"
+                rounded
+                color="red darken-4"
+                @click="del"
+              >Delete</v-btn>
+              <v-dialog v-model="dialog" max-width="350">
+                <div v-if="progress" class="text-center">
+                  <v-card class="progress">
+                    <p>Processing</p>
+                    <v-progress-circular indeterminate :size="70" :width="7" color="teal"></v-progress-circular>
+                  </v-card>
+                </div>
+                <v-card v-else>
+                  <v-card-title class="headline">Is this correct?</v-card-title>
+                  <v-card-text>
+                    <strong>Date:</strong>
+                    {{dialogContent.date}}
+                    <br />
+                    <strong>Service:</strong>
+                    {{dialogContent.service}}
+                    <br />
+                    <strong>Price:</strong>
+                    ${{dialogContent.price}}
+                    <br />
+                    <strong>Tips:</strong>
+                    ${{dialogContent.tips}}
+                  </v-card-text>
+                  <v-card-actions>
+                    <v-spacer></v-spacer>
+                    <v-btn color="red darken-4" text @click="onCancel">Cancel</v-btn>
+                    <v-btn color="green darken-1" text @click="onConfirm">Ok</v-btn>
+                  </v-card-actions>
                 </v-card>
-              </div>
-              <v-card v-else>
-                <v-card-title class="headline">Is this correct?</v-card-title>
-                <v-card-text>
-                  <strong>Date:</strong>
-                  {{dialogContent.date}}
-                  <br />
-                  <strong>Service:</strong>
-                  {{dialogContent.service}}
-                  <br />
-                  <strong>Price:</strong>
-                  ${{dialogContent.price}}
-                  <br />
-                  <strong>Tips:</strong>
-                  ${{dialogContent.tips}}
-                </v-card-text>
-                <v-card-actions>
-                  <v-spacer></v-spacer>
-                  <v-btn color="red darken-4" text @click="onCancel">Cancel</v-btn>
-                  <v-btn color="green darken-1" text @click="onConfirm">Ok</v-btn>
-                </v-card-actions>
-              </v-card>
-            </v-dialog>
-          </v-row>
+              </v-dialog>
+            </v-row>
           </template>
         </div>
       </v-card>
@@ -168,8 +168,8 @@ export default {
       "Regular Pedi": false,
       "Gel Pedi": false,
       "Deluxe Pedi": false,
-      "Design": false,
-      "Fullset": false,
+      Design: false,
+      Fullset: false,
       "Fullset Ombre": false,
       Fill: false,
       Extra: false,
@@ -217,7 +217,9 @@ export default {
     if (this.transaction !== undefined && this.transaction !== null) {
       this.price = this.transaction.price;
       this.tips = this.transaction.tips || 0;
-      this.date = this.transaction.date.toLocaleDateString('fr-CA', {timeZone: 'UTC'});
+      this.date = this.transaction.date.toLocaleDateString("fr-CA", {
+        timeZone: "UTC"
+      });
       for (const service in this.transaction.service) {
         this.services[service] = this.transaction.service[service];
       }
@@ -228,10 +230,10 @@ export default {
       this.progress = false;
       this.dialog = false;
       this.snackbar = true;
-      Object.keys(this.services).map(e => this.services[e] = false)
+      Object.keys(this.services).map(e => (this.services[e] = false));
       this.price = null;
       this.tips = null;
-      this.date = new Date().toLocaleDateString("fr-CA", {timeZone: 'UTC'});
+      this.date = new Date().toLocaleDateString("fr-CA", { timeZone: "UTC" });
       this.dateFormatted = this.formatDate(
         new Date().toLocaleDateString("fr-CA")
       );
@@ -243,13 +245,17 @@ export default {
       this.deleteProgress = true;
       let deleteItem = {
         id: this.transaction.id,
-        date: new Intl.DateTimeFormat('en-US', {timeZone: 'UTC'}).format(this.transaction.date)
-      }
-      db.collection('transactions').doc(this.transaction.id).delete()
-      .then(() => {
-        this.$emit("deleted", deleteItem);
-      })
-      .catch((error) => console.log("Error removing document: ", error))
+        date: new Intl.DateTimeFormat("en-US", { timeZone: "UTC" }).format(
+          this.transaction.date
+        )
+      };
+      db.collection("transactions")
+        .doc(this.transaction.id)
+        .delete()
+        .then(() => {
+          this.$emit("deleted", deleteItem);
+        })
+        .catch(error => console.log("Error removing document: ", error));
     },
     addService(service) {
       this.services[service] = true;
@@ -264,24 +270,25 @@ export default {
         .filter(key => this.services[key])
         .forEach(e => (service[e] = true));
       let data = {
-          date: new Date(this.date),
-          price: parseFloat(this.price),
-          tips: parseFloat(this.tips) || 0,
-          user: db.doc(`/users/${this.user}`),
-          service
-      }
+        date: new Date(this.date),
+        price: parseFloat(this.price),
+        tips: parseFloat(this.tips) || 0,
+        user: db.doc(`/users/${this.user}`),
+        service
+      };
       if (this.modify) {
-        db.collection("transactions").doc(this.transaction.id)
-        .set(data)
-        .then(() => {
-          this.cleanup()
-          this.$emit("updated", {data: data, id:this.transaction.id});
-        })
-        .catch(error => {
-          this.progress = false;
-          this.dialog = false;
-          console.error("Error updating document: ", error);
-        });
+        db.collection("transactions")
+          .doc(this.transaction.id)
+          .set(data)
+          .then(() => {
+            this.cleanup();
+            this.$emit("updated", { data: data, id: this.transaction.id });
+          })
+          .catch(error => {
+            this.progress = false;
+            this.dialog = false;
+            console.error("Error updating document: ", error);
+          });
       } else {
         db.collection("transactions")
           .add(data)

@@ -3,20 +3,19 @@
 </template>
 
 <script>
-import Transaction from './Transaction.vue'
+import Transaction from "./Transaction.vue";
 export default {
-	name: 'Add',
-	components: {
-		Transaction
-	},
-	data() {
-		return {
-			modify: false,
-		}
-	}
-}
+  name: "Add",
+  components: {
+    Transaction
+  },
+  data() {
+    return {
+      modify: false
+    };
+  }
+};
 </script>
 
 <style>
-
 </style>

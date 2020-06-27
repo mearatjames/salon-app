@@ -77,7 +77,7 @@
 
             <v-list-item-content>
               <v-list-item-subtitle>Customers</v-list-item-subtitle>
-              <v-list-item-title>{{switcher ? totalDateRange.customer : total.customer}}</v-list-item-title>
+              <v-list-item-title>{{total.customer}}</v-list-item-title>
             </v-list-item-content>
           </v-list-item>
           <v-list-item>
@@ -91,7 +91,7 @@
                 {{new Intl.NumberFormat('en-US', {
                 style: 'currency',
                 currency: 'USD',
-                }).format(switcher ? totalDateRange.beforeSplit : total.beforeSplit)}}
+                }).format(total.beforeSplit)}}
               </v-list-item-title>
             </v-list-item-content>
           </v-list-item>
@@ -106,7 +106,7 @@
                   {{new Intl.NumberFormat('en-US', {
                   style: 'currency',
                   currency: 'USD',
-                  }).format(switcher ? totalDateRange.mySplit : total.mySplit)}}
+                  }).format(total.mySplit)}}
                 </v-list-item-title>
               </v-list-item-content>
             </template>
@@ -139,7 +139,7 @@
                 {{new Intl.NumberFormat('en-US', {
                 style: 'currency',
                 currency: 'USD',
-                }).format(switcher ? totalDateRange.tips : total.tips)}}
+                }).format(total.tips)}}
               </v-list-item-title>
             </v-list-item-content>
           </v-list-item>
@@ -154,14 +154,12 @@
                 {{new Intl.NumberFormat('en-US', {
                 style: 'currency',
                 currency: 'USD',
-                }).format(switcher ? totalDateRange.mySplit + totalDateRange.tips : total.mySplit + total.tips)}}
+                }).format(total.mySplit + total.tips)}}
               </v-list-item-title>
             </v-list-item-content>
           </v-list-item>
         </v-list>
       </v-sheet>
-      <!-- <v-subheader>WEEKLY TRENDS</v-subheader>
-      <BarChart></BarChart>-->
     </v-sheet>
   </div>
 </template>
@@ -169,12 +167,10 @@
 <script>
 import db from "./firebaseInit";
 import DateRangePicker from "./DateRangePicker.vue";
-// import DoughnutChart from './DoughnutChart'
 
 export default {
   name: "Dashboard",
   components: {
-    // DoughnutChart
     DateRangePicker
   },
   data: () => ({
@@ -186,7 +182,7 @@ export default {
     switcher: false,
     progress: false,
     date: new Date().toISOString().substr(0, 7),
-    total: {
+    totalMonth: {
       tips: 0,
       beforeSplit: 0,
       mySplit: 0,
@@ -210,6 +206,15 @@ export default {
             year: "numeric"
           }).format(new Date(this.date))
         : "";
+    },
+    total() {
+      if (this.switcher) {
+        this.splitCal(this.totalDateRange);
+        return this.totalDateRange;
+      } else {
+        this.splitCal(this.totalMonth);
+        return this.totalMonth;
+      }
     }
   },
   created() {
@@ -226,78 +231,43 @@ export default {
       .orderBy("date", "desc")
       .get()
       .then(querySnapshot => {
-        querySnapshot.forEach(doc => {
-          let data = doc.data();
-          this.total.tips += data.tips;
-          this.total.beforeSplit += data.price;
-          this.total.customer++;
-        });
-        this.total.mySplit = Math.round(
-          this.total.beforeSplit * this.split * 0.01
-        );
-        this.total.salonSplit = this.total.beforeSplit - this.total.mySplit;
+        this.aggregate(querySnapshot, this.totalMonth);
       });
   },
   methods: {
+    splitCal(total) {
+      total.mySplit = Math.round(total.beforeSplit * this.split * 0.01);
+      total.salonSplit = total.beforeSplit - total.mySplit;
+    },
     updateDates(dates) {
       if (dates.length < 1) {
-        return
+        return;
       }
       if (dates.length == 1) {
-        console.log('1')
         this.initDates = dates;
-        this.totalDateRange = {
-          tips: 0,
-          beforeSplit: 0,
-          mySplit: 0,
-          salonSplit: 0,
-          customer: 0
-        };
-        this.progress = true
-      db.collection("transactions")
-      .where("user", "==", db.collection("users").doc(this.user.email))
-      .where("date", "==", new Date(dates[0]))
-      .get()
-      .then(querySnapshot => {
-        querySnapshot.forEach(doc => {
-              let data = doc.data()
-              this.totalDateRange.tips += data.tips
-              this.totalDateRange.beforeSplit += data.price
-              this.totalDateRange.customer++
-            })
-            this.totalDateRange.mySplit = Math.round(this.totalDateRange.beforeSplit * this.split * 0.01)
-            this.totalDateRange.salonSplit = this.totalDateRange.beforeSplit - this.totalDateRange.mySplit
-            this.progress= false
+        this.reset(this.totalDateRange);
+        this.progress = true;
+        db.collection("transactions")
+          .where("user", "==", db.collection("users").doc(this.user.email))
+          .where("date", "==", new Date(dates[0]))
+          .get()
+          .then(querySnapshot => {
+            this.aggregate(querySnapshot, this.totalDateRange);
           });
       } else {
         this.initDates = dates;
-      this.totalDateRange = {
-        tips: 0,
-        beforeSplit: 0,
-        mySplit: 0,
-        salonSplit: 0,
-        customer: 0
-      };
-      this.progress = true
-      db.collection("transactions")
-      .where("user", "==", db.collection("users").doc(this.user.email))
-      .where("date", ">=", new Date(dates[0]))
-      .where("date", "<=", new Date(dates[1]))
-      .orderBy("date", "desc")
-      .get()
-      .then(querySnapshot => {
-        querySnapshot.forEach(doc => {
-              let data = doc.data()
-              this.totalDateRange.tips += data.tips
-              this.totalDateRange.beforeSplit += data.price
-              this.totalDateRange.customer++
-            })
-            this.totalDateRange.mySplit = Math.round(this.totalDateRange.beforeSplit * this.split * 0.01)
-            this.totalDateRange.salonSplit = this.totalDateRange.beforeSplit - this.totalDateRange.mySplit
-            this.progress= false
+        this.reset(this.totalDateRange);
+        this.progress = true;
+        db.collection("transactions")
+          .where("user", "==", db.collection("users").doc(this.user.email))
+          .where("date", ">=", new Date(dates[0]))
+          .where("date", "<=", new Date(dates[1]))
+          .orderBy("date", "desc")
+          .get()
+          .then(querySnapshot => {
+            this.aggregate(querySnapshot, this.totalDateRange);
           });
       }
-      
     },
     updateSplit() {
       db.collection("users")
@@ -305,22 +275,10 @@ export default {
         .set({ split: this.slider }, { merge: true })
         .then(() => {
           this.split = this.slider;
-          this.total.mySplit = Math.round(
-            this.total.beforeSplit * this.split * 0.01
-          );
-          this.totalDateRange.mySplit = Math.round(
-            this.totalDateRange.beforeSplit * this.split * 0.01
-          );
         });
     },
     updateList() {
-      this.total = {
-        tips: 0,
-        beforeSplit: 0,
-        mySplit: 0,
-        salonSplit: 0,
-        customer: 0
-      };
+      this.reset(this.totalMonth);
       this.progress = true;
       let maxMonth = new Date(this.date);
       maxMonth.setMonth(maxMonth.getMonth() + 1);
@@ -331,18 +289,24 @@ export default {
         .orderBy("date", "desc")
         .get()
         .then(querySnapshot => {
-          querySnapshot.forEach(doc => {
-            let data = doc.data();
-            this.total.tips += data.tips;
-            this.total.beforeSplit += data.price;
-            this.total.customer++;
-          });
-          this.total.mySplit = Math.round(
-            this.total.beforeSplit * this.split * 0.01
-          );
-          this.total.salonSplit = this.total.beforeSplit - this.total.mySplit;
-          this.progress = false;
+          this.aggregate(querySnapshot, this.totalMonth);
         });
+    },
+    reset(total) {
+      total.tips = 0;
+      total.customer = 0;
+      total.beforeSplit = 0;
+      total.mySplit = 0;
+      total.salonSplit = 0;
+    },
+    aggregate(querySnapshot, total) {
+      querySnapshot.forEach(doc => {
+        let data = doc.data();
+        total.tips += data.tips;
+        total.beforeSplit += data.price;
+        total.customer++;
+      });
+      this.progress = false;
     }
   }
 };
