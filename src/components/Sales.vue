@@ -1,5 +1,21 @@
 <template>
     <v-container class="container" fluid>
+      <v-row>
+        <v-col cols="12">
+          <v-card
+            color="#1F7087"
+            dark
+          >
+            <v-card-title class="headline">Unlimited music now</v-card-title>
+
+            <v-card-subtitle>Listen to your favorite artists and albums whenever and wherever, online and offline.</v-card-subtitle>
+
+            <v-card-actions>
+              <v-btn text>Listen Now</v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-col>
+      </v-row>
       <v-row dense>
         <v-col lg="6" md="6" sm="6" xs="12" v-for="card in cards" :key="card.title">
           <v-card>
@@ -13,13 +29,13 @@
             </v-img>
             <div class="text-center button-container">
               <v-btn class="minus" rounded medium color="red lighten-5" dark>
-                <v-icon color="red">mdi-minus</v-icon>
+                <v-icon color="red darken-2">mdi-minus</v-icon>
               </v-btn>
-              <v-avatar class="qty elevation-2" color="teal" size="62">
+              <v-avatar class="qty elevation-2" color="#1F7087" size="62">
                 <span class="white--text headline">0</span>
               </v-avatar>
               <v-btn class="plus" rounded medium color="teal lighten-5" dark>
-                <v-icon color="teal">mdi-plus</v-icon>
+                <v-icon color="teal darken-2">mdi-plus</v-icon>
               </v-btn>
             </div>
           </v-card>
