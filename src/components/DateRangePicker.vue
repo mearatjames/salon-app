@@ -29,9 +29,9 @@
       :max="new Date().toLocaleDateString('fr-CA')"
     >
       <v-spacer></v-spacer>
-      <v-btn rounded color="warning" @click="menu = false">Cancel</v-btn>
+      <v-btn text color="warning" @click="menu = false">Cancel</v-btn>
       <v-btn
-        rounded
+        text
         dark
         color="teal"
         @click="$refs.menu.save(dates), $emit('updateDates', dates)"
