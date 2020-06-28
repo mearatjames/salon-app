@@ -47,7 +47,7 @@
         </v-alert>
       </div>
       <template v-for="(tdate, date) in transactions">
-        <v-subheader :key="date">
+        <v-subheader class="subheader" :key="date">
           <strong>{{date}}</strong>
         </v-subheader>
         <template v-for="(transaction, index) in tdate">
@@ -76,7 +76,7 @@
         <div :key="date + 'Total'" class="total">
           <v-chip
             class="ma-2"
-            color="success"
+            color="teal"
             outlined
           >Total: ${{tdate.reduce((acc, current) => ({price: acc.price + current.price})).price}} | Tips: ${{tdate.reduce((acc, current) => ({tips: acc.tips + current.tips})).tips}}</v-chip>
         </div>
@@ -252,5 +252,9 @@ export default {
   display: flex;
   justify-content: flex-end;
   padding-right: 10px;
+}
+.subheader {
+  height: 30px;
+  align-items: flex-end;
 }
 </style>

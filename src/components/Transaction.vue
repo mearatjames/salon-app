@@ -128,8 +128,8 @@
                   </v-card-text>
                   <v-card-actions>
                     <v-spacer></v-spacer>
-                    <v-btn color="red darken-4" text @click="onCancel">Cancel</v-btn>
-                    <v-btn color="green darken-1" text @click="onConfirm">Ok</v-btn>
+                    <v-btn color="warning" text @click="onCancel">Cancel</v-btn>
+                    <v-btn color="teal" text @click="onConfirm">Ok</v-btn>
                   </v-card-actions>
                 </v-card>
               </v-dialog>
@@ -327,7 +327,7 @@ export default {
   padding: 20px;
 }
 .title-edit {
-  background-color: rgb(81, 186, 36);
+  background-color: #1F7087;
 }
 .title-add {
   background-color: rgb(16, 172, 131);
