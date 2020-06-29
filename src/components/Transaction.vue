@@ -233,7 +233,7 @@ export default {
       Object.keys(this.services).map(e => (this.services[e] = false));
       this.price = null;
       this.tips = null;
-      this.date = new Date().toLocaleDateString("fr-CA", { timeZone: "UTC" });
+      this.date = new Date().toLocaleDateString("fr-CA");
       this.dateFormatted = this.formatDate(
         new Date().toLocaleDateString("fr-CA")
       );
@@ -249,6 +249,7 @@ export default {
           this.transaction.date
         )
       };
+      console.log(deleteItem)
       db.collection("transactions")
         .doc(this.transaction.id)
         .delete()

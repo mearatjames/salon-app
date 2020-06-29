@@ -203,7 +203,8 @@ export default {
       return this.date
         ? new Intl.DateTimeFormat("en-US", {
             month: "long",
-            year: "numeric"
+            year: "numeric",
+            timeZone: "UTC"
           }).format(new Date(this.date))
         : "";
     },
