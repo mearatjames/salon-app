@@ -62,7 +62,7 @@
                 class="service-text"
               >{{Object.keys(transaction.service).join(', ')}}</v-list-item-title>
               <v-list-item-subtitle>
-                <strong></strong>
+                {{transaction.customer}}
               </v-list-item-subtitle>
             </v-list-item-content>
             <v-list-item-content class="amount">
@@ -202,6 +202,7 @@ export default {
               let transaction = {
                 id: doc.id,
                 date: data.date.toDate(),
+                customer: data.customer || null,
                 price: data.price,
                 tips: data.tips || 0,
                 service: data.service
