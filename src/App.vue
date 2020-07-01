@@ -2,10 +2,12 @@
   <v-app class="override">
     <v-app-bar app color="teal" dark>
       <div v-if="isLoggedIn" class="d-flex align-center user">
-        <v-avatar size="36" color="teal darken-3">
-          <v-icon dark>mdi-account-circle</v-icon>
+        <v-btn to='/user' text>
+        <v-avatar size="48" color="teal darken-3">
+          <img src="./assets/icon.jpg" alt="Aiai.91" />
         </v-avatar>
-        <p class="title">{{this.user.name}}</p>
+        <div class="username text-h3">{{this.user.name}}</div>
+        </v-btn>
       </div>
       <v-spacer></v-spacer>
 
@@ -86,9 +88,11 @@ export default {
 body {
   overflow-x: hidden;
 }
-.user p.title {
+.user div.username {
   margin-bottom: 0;
   padding-left: 5px;
+  text-transform: none;
+  font-size: 18px;
 }
 @media only screen and (max-width: 1068px) {
   .padding {
