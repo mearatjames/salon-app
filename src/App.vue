@@ -15,7 +15,7 @@
     <NavDrawer></NavDrawer>
     <div class="padding">
       <v-content>
-        <router-view v-on:updateThumbnail="updateThumbnail"></router-view>
+        <router-view :thumbnail="thumbnail" v-on:updateThumbnail="updateThumbnail"></router-view>
       </v-content>
     </div>
     <BottomNav />
@@ -101,6 +101,7 @@ export default {
 </script>
 
 <style>
+
 .override .v-application--wrap {
   min-height: 100%;
 }

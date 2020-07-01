@@ -10,7 +10,7 @@
                 prepend-icon="mdi-camera"
                 :clearable="false"
                 type="file"
-                label="File input"
+                label="Choose an image"
                 @change="croppie"
               ></v-file-input>
               <vue-croppie
@@ -33,7 +33,7 @@
               <v-card-actions>
                 <v-btn @click="update = true" text><v-icon class="pr-1">mdi-camera</v-icon>Edit</v-btn>
               </v-card-actions>
-            <v-avatar class="ma-3" size="125">
+            <v-avatar class="ma-3 elevation-2" size="125">
               <v-img :src="cropped || ''"></v-img>
             </v-avatar>
             </div>
@@ -52,30 +52,20 @@ let storageRef = firebase.storage().ref();
 
 export default {
   name: "User",
+  props: {
+    thumbnail: String
+  },
   data() {
     return {
       update: false,
       croppieImage: "",
-      cropped: null,
+      cropped: this.thumbnail || null,
       user: JSON.parse(localStorage.getItem("user"))
     };
-  },
-  created() {
-    storageRef
-      .child(this.user.uid + "/thumbnail.jpeg")
-      .getDownloadURL()
-      .then(url => {
-        this.cropped = url;
-      })
-      .catch(error => {
-        this.cropped = "";
-        console.log(error);
-      });
   },
   methods: {
     croppie(e) {
       if (!e) return;
-
       var reader = new FileReader();
       reader.readAsDataURL(e);
       reader.onload = () => {
