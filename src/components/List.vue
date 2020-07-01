@@ -105,7 +105,7 @@ export default {
     Transaction
   },
   data: () => ({
-    date: new Date().toISOString().substr(0, 7),
+    date: new Date().toLocaleDateString("fr-CA").substr(0, 7),
     menu: false,
     modal: false,
     tile: false,

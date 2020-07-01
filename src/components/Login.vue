@@ -172,6 +172,7 @@ export default {
                   "user",
                   JSON.stringify({
                     email: data.user.email,
+                    uid: firebase.auth().currentUser.uid,
                     name: querySnapshot.data().firstname
                   })
                 );

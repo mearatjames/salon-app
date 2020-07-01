@@ -4,22 +4,20 @@
       <div v-if="isLoggedIn" class="d-flex align-center user">
         <v-btn to='/user' text>
         <v-avatar size="48" color="teal darken-3">
-          <img src="./assets/icon.jpg" alt="Aiai.91" />
+          <img :src="thumbnail" alt="Aiai.91" />
         </v-avatar>
         <div class="username text-h3">{{this.user.name}}</div>
         </v-btn>
       </div>
       <v-spacer></v-spacer>
-
       <v-btn v-if="isLoggedIn" v-on:click="logout" depressed text medium>Logout</v-btn>
     </v-app-bar>
     <NavDrawer></NavDrawer>
     <div class="padding">
       <v-content>
-        <router-view></router-view>
+        <router-view v-on:updateThumbnail="updateThumbnail"></router-view>
       </v-content>
     </div>
-
     <BottomNav />
   </v-app>
 </template>
@@ -27,9 +25,11 @@
 <script>
 import firebase from "firebase/app";
 import "firebase/auth";
+import "firebase/storage";
 import db from "./components/firebaseInit";
 import BottomNav from "./components/BottomNav";
 import NavDrawer from "./components/NavDrawer";
+import thumbnail from "./assets/icon.jpg"
 
 export default {
   name: "App",
@@ -43,7 +43,7 @@ export default {
     isLoggedIn: false,
     currentUser: false,
     user: null,
-    test: null
+    thumbnail: thumbnail
   }),
   created() {
     if (firebase.auth().currentUser) {
@@ -51,6 +51,7 @@ export default {
       this.currentUser = firebase.auth().currentUser.email;
       if (localStorage.getItem("user")) {
         this.user = JSON.parse(localStorage.getItem("user"));
+        this.getThumbnail()
       } else {
         db.collection("users")
           .doc(this.currentUser)
@@ -60,14 +61,30 @@ export default {
               "user",
               JSON.stringify({
                 email: this.currentUser,
+                uid: firebase.auth().currentUser.uid,
                 name: querySnapshot.data().firstname
               })
             );
+            this.user = JSON.parse(localStorage.getItem("user"));
+            this.getThumbnail()
           });
       }
     }
   },
   methods: {
+    getThumbnail() {
+      let storageRef = firebase.storage().ref();
+      storageRef
+      .child(this.user.uid + "/thumbnail.jpeg")
+      .getDownloadURL()
+      .then(url => {
+        console.log(url);
+        this.thumbnail = url
+      })
+      .catch(error => {
+        console.log(error);
+      });
+    },
     logout: function() {
       firebase
         .auth()
@@ -76,6 +93,9 @@ export default {
           localStorage.removeItem("user");
           location.reload(true);
         });
+    },
+    updateThumbnail(url) {
+      this.thumbnail = url
     }
   }
 };
