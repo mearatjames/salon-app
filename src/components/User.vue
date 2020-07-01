@@ -2,30 +2,17 @@
   <v-container>
     <v-row dense>
       <v-col cols="12">
-        <v-card color="#385F73" dark>
-          <div class="d-flex flex-no-wrap justify-space-between">
+        <v-card color="cyan darken-3" dark>
+          <div v-if="update" class="d-flex flex-column align-center">
             <div>
-              <v-card-title class="headline">AiAi's Profile</v-card-title>
-
-              <v-card-subtitle>Listen to your favorite artists and albums whenever and wherever, online and offline.</v-card-subtitle>
-
-              <v-card-actions>
-                <v-btn text>Update Profile Pic</v-btn>
-              </v-card-actions>
-            </div>
-            <v-avatar class="ma-3" size="125">
-              <v-img :src="cropped || ''"></v-img>
-            </v-avatar>
-          </div>
-        </v-card>
-      </v-col>
-    </v-row>
-    <v-row dense>
-      <v-col cols="12">
-        <v-card color="#385F73" dark>
-          <div class="d-flex flex-no-wrap justify-space-between">
-            <div>
-              <input type="file" @change="croppie" />
+              <v-file-input
+                class="px-4"
+                prepend-icon="mdi-camera"
+                :clearable="false"
+                type="file"
+                label="File input"
+                @change="croppie"
+              ></v-file-input>
               <vue-croppie
                 customClass="styleCrop"
                 :enableResize="false"
@@ -35,8 +22,21 @@
               ></vue-croppie>
             </div>
             <v-card-actions>
-              <v-btn @click="crop()" text>Crop</v-btn>
+              <v-btn class="px-4" color="warning" @click="update = false" rounded>Cancel</v-btn>
+              <v-btn class="px-4" color="teal" @click="crop()" rounded>Update</v-btn>
             </v-card-actions>
+          </div>
+          <div v-else>
+              <v-card-title class="headline">{{user.name}}'s Profile</v-card-title>
+            <div  class="d-flex flex-no-wrap justify-space-between">
+
+              <v-card-actions>
+                <v-btn @click="update = true" text><v-icon class="pr-1">mdi-camera</v-icon>Edit</v-btn>
+              </v-card-actions>
+            <v-avatar class="ma-3" size="125">
+              <v-img :src="cropped || ''"></v-img>
+            </v-avatar>
+            </div>
           </div>
         </v-card>
       </v-col>
@@ -54,6 +54,7 @@ export default {
   name: "User",
   data() {
     return {
+      update: false,
       croppieImage: "",
       cropped: null,
       user: JSON.parse(localStorage.getItem("user"))
@@ -73,19 +74,18 @@ export default {
   },
   methods: {
     croppie(e) {
-      var files = e.target.files || e.dataTransfer.files;
-      if (!files.length) return;
+      if (!e) return;
 
       var reader = new FileReader();
-      reader.onload = e => {
+      reader.readAsDataURL(e);
+      reader.onload = () => {
         this.$refs.croppieRef.bind({
-          url: e.target.result
+          url: reader.result
         });
       };
-
-      reader.readAsDataURL(files[0]);
     },
     crop() {
+		this.update = false
       let uploadRef = storageRef.child(this.user.uid + "/thumbnail.jpeg");
       let options = {
         type: "blob",
@@ -93,12 +93,11 @@ export default {
         format: "jpeg"
       };
       this.$refs.croppieRef.result(options, output => {
-        uploadRef.put(output).then((snapshopt) => {
+        uploadRef.put(output).then(snapshopt => {
           snapshopt.ref.getDownloadURL().then(url => {
-			this.cropped = url;
-			this.$emit('updateThumbnail', this.cropped)
+            this.cropped = url;
+            this.$emit("updateThumbnail", this.cropped);
           });
-          //   location.reload();
         });
       });
     }

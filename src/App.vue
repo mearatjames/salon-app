@@ -2,7 +2,7 @@
   <v-app class="override">
     <v-app-bar app color="teal" dark>
       <div v-if="isLoggedIn" class="d-flex align-center user">
-        <v-btn to='/user' text>
+        <v-btn class="pl-0" to='/user' text>
         <v-avatar size="48" color="teal darken-3">
           <img :src="thumbnail" alt="Aiai.91" />
         </v-avatar>
@@ -78,7 +78,6 @@ export default {
       .child(this.user.uid + "/thumbnail.jpeg")
       .getDownloadURL()
       .then(url => {
-        console.log(url);
         this.thumbnail = url
       })
       .catch(error => {
