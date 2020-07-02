@@ -62,7 +62,7 @@
                 class="service-text"
               >{{Object.keys(transaction.service).join(', ')}}</v-list-item-title>
               <v-list-item-subtitle>
-                <strong></strong>
+                {{transaction.customer}}
               </v-list-item-subtitle>
             </v-list-item-content>
             <v-list-item-content class="amount">
@@ -105,7 +105,7 @@ export default {
     Transaction
   },
   data: () => ({
-    date: new Date().toISOString().substr(0, 7),
+    date: new Date().toLocaleDateString("fr-CA").substr(0, 7),
     menu: false,
     modal: false,
     tile: false,
@@ -127,7 +127,8 @@ export default {
       return this.date
         ? new Intl.DateTimeFormat("en-US", {
             month: "long",
-            year: "numeric"
+            year: "numeric",
+            timeZone: "UTC"
           }).format(new Date(this.date))
         : "";
     }
@@ -201,6 +202,7 @@ export default {
               let transaction = {
                 id: doc.id,
                 date: data.date.toDate(),
+                customer: data.customer || null,
                 price: data.price,
                 tips: data.tips || 0,
                 service: data.service

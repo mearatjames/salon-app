@@ -181,7 +181,7 @@ export default {
     slider: 0,
     switcher: false,
     progress: false,
-    date: new Date().toISOString().substr(0, 7),
+    date: new Date().toLocaleDateString("fr-CA").substr(0, 7),
     totalMonth: {
       tips: 0,
       beforeSplit: 0,
@@ -203,7 +203,8 @@ export default {
       return this.date
         ? new Intl.DateTimeFormat("en-US", {
             month: "long",
-            year: "numeric"
+            year: "numeric",
+            timeZone: "UTC"
           }).format(new Date(this.date))
         : "";
     },

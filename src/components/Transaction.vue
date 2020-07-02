@@ -2,7 +2,7 @@
   <div>
     <v-form ref="form">
       <v-card max-width="450" :elevation="12" class="transaction-card">
-        <v-img v-if="modify" class="white--text title-edit align-end" height="80px">
+        <v-img v-if="modify" class="white--text title-edit align-end" height="65px">
           <div class="title-flex">
             <v-card-title>Modify Transaction</v-card-title>
             <v-card-actions>
@@ -12,7 +12,7 @@
             </v-card-actions>
           </div>
         </v-img>
-        <v-img v-else class="white--text title-add align-end" height="80px">
+        <v-img v-else class="white--text title-add align-end" height="65px">
           <v-card-title>Add New Transaction</v-card-title>
         </v-img>
 
@@ -67,6 +67,13 @@
               ></Chip>
             </div>
             <v-text-field
+              v-model="customer"
+              prepend-icon="mdi-face-woman"
+              placeholder=" "
+              label="Customer"
+              color="teal"
+            ></v-text-field>
+            <v-text-field
               v-model="price"
               color="teal"
               prepend-icon="mdi-cash-100"
@@ -119,6 +126,9 @@
                     <br />
                     <strong>Service:</strong>
                     {{dialogContent.service}}
+                    <br />
+                    <strong>Customer:</strong>
+                    {{dialogContent.customer}}
                     <br />
                     <strong>Price:</strong>
                     ${{dialogContent.price}}
@@ -175,6 +185,7 @@ export default {
       Extra: false,
       Other: false
     },
+    customer: null,
     price: null,
     tips: null,
     date: new Date().toLocaleDateString("fr-CA"),
@@ -189,6 +200,7 @@ export default {
     dialogContent: function() {
       return {
         date: this.dateFormatted,
+        customer: this.customer,
         price: this.price,
         tips: this.tips || 0,
         service: Object.keys(this.services)
@@ -216,6 +228,7 @@ export default {
   created() {
     if (this.transaction !== undefined && this.transaction !== null) {
       this.price = this.transaction.price;
+      this.customer = this.transaction.customer;
       this.tips = this.transaction.tips || 0;
       this.date = this.transaction.date.toLocaleDateString("fr-CA", {
         timeZone: "UTC"
@@ -233,7 +246,8 @@ export default {
       Object.keys(this.services).map(e => (this.services[e] = false));
       this.price = null;
       this.tips = null;
-      this.date = new Date().toLocaleDateString("fr-CA", { timeZone: "UTC" });
+      this.customer = null;
+      this.date = new Date().toLocaleDateString("fr-CA");
       this.dateFormatted = this.formatDate(
         new Date().toLocaleDateString("fr-CA")
       );
@@ -249,6 +263,7 @@ export default {
           this.transaction.date
         )
       };
+      console.log(deleteItem);
       db.collection("transactions")
         .doc(this.transaction.id)
         .delete()
@@ -271,6 +286,7 @@ export default {
         .forEach(e => (service[e] = true));
       let data = {
         date: new Date(this.date),
+        customer: this.customer,
         price: parseFloat(this.price),
         tips: parseFloat(this.tips) || 0,
         user: db.doc(`/users/${this.user}`),
@@ -327,7 +343,7 @@ export default {
   padding: 20px;
 }
 .title-edit {
-  background-color: #1F7087;
+  background-color: #1f7087;
 }
 .title-add {
   background-color: rgb(16, 172, 131);
@@ -336,6 +352,14 @@ export default {
   width: 90%;
   margin: 40px auto;
 }
+
+@media only screen and (max-width: 735px) {
+  .transaction-card {
+    width: 100%;
+    margin: 10px auto;
+  }
+}
+
 .add {
   margin: 20px 10px;
   color: white;
