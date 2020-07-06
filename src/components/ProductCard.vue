@@ -35,9 +35,13 @@ export default {
   methods: {
 	add() {
 		this.counter++
+		this.$emit("updateCounter", {qty: this.counter, sku: this.card.sku});
 	},
 	subtract() {
-		this.counter > 0 ? this.counter-- : null
+		if (this.counter > 0) {
+			this.counter--
+			this.$emit("updateCounter", {qty: this.counter, sku: this.card.sku})	
+		}
 	}
   }
 };

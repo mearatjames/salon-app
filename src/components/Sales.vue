@@ -15,7 +15,7 @@
         </v-col>
       </v-row>
       <v-row dense>
-        <v-col lg="6" md="6" sm="6" xs="12" v-for="card in cards" :key="card.title">
+        <v-col lg="4" md="6" sm="6" v-for="card in cards" :key="card.title">
           <ProductCard :card="card" />
         </v-col>
       </v-row>
@@ -45,14 +45,17 @@ export default {
       {
         title: "Nails Kit",
         price: 10,
+        sku: 1,
         src: "https://cdn.vuetifyjs.com/images/cards/house.jpg"
       },
       {
         title: "Secon Item",
         price: 5,
+        sku: 2,
         src: "https://cdn.vuetifyjs.com/images/cards/house.jpg"
       }
-    ]
+    ],
+    productSale: []
   })
 };
 </script>
