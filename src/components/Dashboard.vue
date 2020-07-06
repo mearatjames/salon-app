@@ -159,6 +159,7 @@
             </v-list-item-content>
           </v-list-item>
         </v-list>
+       
       </v-sheet>
     </v-sheet>
   </div>
@@ -236,6 +237,7 @@ export default {
       });
   },
   methods: {
+    
     splitCal(total) {
       total.mySplit = Math.round(total.beforeSplit * this.split * 0.01);
       total.salonSplit = total.beforeSplit - total.mySplit;
@@ -246,6 +248,7 @@ export default {
       }
       if (dates.length == 1) {
         this.initDates = dates;
+        this.listRange = []
         this.reset(this.totalDateRange);
         this.progress = true;
         db.collection("transactions")
@@ -258,6 +261,7 @@ export default {
       } else {
         this.initDates = dates;
         this.reset(this.totalDateRange);
+        this.listRange = []
         this.progress = true;
         db.collection("transactions")
           .where("user", "==", db.collection("users").doc(this.user.email))
@@ -280,6 +284,7 @@ export default {
     },
     updateList() {
       this.reset(this.totalMonth);
+      this.listMonth = []
       this.progress = true;
       let maxMonth = new Date(this.date);
       maxMonth.setMonth(maxMonth.getMonth() + 1);
@@ -314,14 +319,7 @@ export default {
 </script>
 
 <style scoped>
-.total-snapshot {
-  position: relative;
-  text-align: center;
-  bottom: 50%;
-}
-.snapshot {
-  height: 420px;
-}
+
 .update {
   color: white;
 }
