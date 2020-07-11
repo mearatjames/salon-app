@@ -34,7 +34,8 @@ export default {
           icon: "mdi-clipboard-plus-outline",
           link: "/add"
         },
-        { title: "List", icon: "mdi-view-list", link: "/list" }
+        { title: "List", icon: "mdi-view-list", link: "/list" },
+        { title: "Sales", icon: "mdi-basket-outline", link: "/sales" }
       ],
       right: null
     };

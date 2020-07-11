@@ -350,13 +350,12 @@ export default {
 }
 .transaction-card {
   width: 90%;
-  margin: 40px auto;
+  margin: 20px auto;
 }
 
 @media only screen and (max-width: 735px) {
   .transaction-card {
     width: 100%;
-    margin: 10px auto;
   }
 }
 

@@ -24,12 +24,12 @@ let createWorkbook = async (rows, columnsHeader, fileName) => {
     const priceCol = worksheet.getColumn(4)
 
     dateCol.width = 12
-    serviceCol.width = 30
+    serviceCol.width = 35
     customerCol.width = 15
     priceCol.width = 12
 
 
-    // save workbook to disk
+    // Save workbook to disk
   const saveFile = await workbook.xlsx
       .writeBuffer()
       .then(buffer => {

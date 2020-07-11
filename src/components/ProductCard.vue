@@ -1,14 +1,14 @@
 <template>
-  <v-card>
+  <v-card min-height="100%">
     <v-img
       :src="card.src"
-      class="white--text align-end"
+      class="white--text align-end product-image"
       gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
-      height="200px"
+      cover
     >
-      <v-card-title v-text="card.title"></v-card-title>
-      <v-card-subtitle class="white--text" v-text="`$${card.price}`"></v-card-subtitle>
     </v-img>
+     <v-card-title class="pt-1" v-text="card.title"></v-card-title>
+      <v-card-subtitle class="pb-0" v-text="`$${card.price}`"></v-card-subtitle>
     <div class="text-center button-container">
       <v-btn class="minus" @click="subtract" rounded medium color="red lighten-5" dark>
         <v-icon color="red darken-2">mdi-minus</v-icon>
@@ -52,7 +52,7 @@ export default {
   display: flex;
   justify-content: center;
   align-items: flex-end;
-  padding: 10px 0;
+  padding: 0 0 8px;
 }
 
 .qty {
@@ -73,5 +73,15 @@ export default {
   margin-left: -40px;
   z-index: 1;
   margin-bottom: 5px;
+}
+
+.product-image {
+  height: 200px;
+}
+
+@media only screen and (max-width: 735px) {
+  .product-image {
+    height: 140px;
+  }
 }
 </style>

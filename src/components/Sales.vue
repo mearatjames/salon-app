@@ -1,6 +1,6 @@
 <template>
     <v-container class="container" fluid>
-      <v-row>
+      <!-- <v-row>
         <v-col cols="12">
           <v-card
             color="#1F7087"
@@ -13,19 +13,20 @@
             </v-card-actions>
           </v-card>
         </v-col>
-      </v-row>
+      </v-row> -->
       <v-row dense>
-        <v-col lg="4" md="6" sm="6" v-for="card in cards" :key="card.title">
+        <v-col cols="6" lg="3" md="6" sm="6" v-for="card in cards" :key="card.title">
           <ProductCard :card="card" />
         </v-col>
       </v-row>
-	<v-card-text style="height: 100px; position: relative">
+	<v-card-text style="height: 60px; position: relative">
             <v-btn
               fixed
               dark
               fab
               right
-              color="pink"
+              color="teal"
+              class="sell"
             >
               Sell
             </v-btn>
@@ -43,15 +44,21 @@ export default {
   data: () => ({
     cards: [
       {
-        title: "Nails Kit",
+        title: "Removal Kit",
         price: 10,
-        sku: 1,
+        sku: '91KT001A',
+        src: "https://firebasestorage.googleapis.com/v0/b/salon-app-d6c37.appspot.com/o/DANhxvXrLhYQzbtjwab21G1GfrQ2%2Fthumbnail.jpeg?alt=media&token=0794db28-8df8-463d-9ee1-4a805d7ba24a"
+      },
+      {
+        title: "Acetone",
+        price: 5,
+        sku: '91KT002A',
         src: "https://cdn.vuetifyjs.com/images/cards/house.jpg"
       },
       {
-        title: "Secon Item",
+        title: "Cuticle Oil",
         price: 5,
-        sku: 2,
+        sku: '91KT003A',
         src: "https://cdn.vuetifyjs.com/images/cards/house.jpg"
       }
     ],
@@ -61,5 +68,7 @@ export default {
 </script>
 
 <style>
-
+ .sell {
+   bottom: 80px;
+ }
 </style>

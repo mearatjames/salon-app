@@ -12,6 +12,10 @@
       <span>List</span>
       <v-icon>mdi-view-list</v-icon>
     </v-btn>
+    <v-btn to="/sales" exact>
+      <span>Sales</span>
+      <v-icon>mdi-basket-outline</v-icon>
+    </v-btn>
   </v-bottom-navigation>
 </template>
 
@@ -27,6 +31,6 @@ export default {
 .v-item-group.v-bottom-navigation .v-btn.v-size--default {
   height: inherit;
   justify-content: flex-end;
-  padding-top: 5px;
+  padding: 5px 0 0;
 }
 </style>
