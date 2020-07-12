@@ -6,18 +6,16 @@
         <v-avatar size="48" color="teal darken-3">
           <img :src="thumbnail" alt="Aiai.91" />
         </v-avatar>
-        <div class="username text-h3">{{this.user.name}}</div>
+        <div class="username text-h6">{{this.user.name}}</div>
         </v-btn>
       </div>
       <v-spacer></v-spacer>
       <v-btn v-if="isLoggedIn" v-on:click="logout" depressed text medium>Logout</v-btn>
     </v-app-bar>
     <NavDrawer></NavDrawer>
-    <div class="padding">
-      <v-content>
+      <v-main class="padding">
         <router-view :thumbnail="thumbnail" v-on:updateThumbnail="updateThumbnail"></router-view>
-      </v-content>
-    </div>
+      </v-main>
     <BottomNav />
   </v-app>
 </template>
@@ -101,7 +99,6 @@ export default {
 </script>
 
 <style>
-
 .override .v-application--wrap {
   min-height: 100%;
 }

@@ -14,32 +14,55 @@
           </v-card>
         </v-col>
       </v-row> -->
+      <div v-if="!checkout">
+      <v-item-group
+      v-model="selected"
+      multiple
+    >
       <v-row dense>
-        <v-col cols="6" lg="3" md="6" sm="6" v-for="card in cards" :key="card.title">
-          <ProductCard :card="card" />
+        <v-col cols="6" lg="3" md="6" sm="6" v-for="card in cards" :key="card.title"> 
+            <ProductCard :card="card" />
         </v-col>
       </v-row>
+    </v-item-group>
 	<v-card-text style="height: 60px; position: relative">
             <v-btn
+              v-show="selected.length > 0"
               fixed
               dark
               fab
               right
               color="teal"
               class="sell"
+              @click="add"
             >
-              Sell
+             <v-badge
+          color="amber darken-3"
+          :value="selected.length > 0"
+          :content="selected.length"
+        >
+         <v-icon>mdi-cart-plus</v-icon>
+        </v-badge>
+             
             </v-btn>
           </v-card-text>
+          <!-- <div>{{items}}</div> -->
+      </div>
+      <div v-else>
+        
+        <Checkout v-on:back="back" />
+      </div>
     </v-container>
 </template>
 
 <script>
 import ProductCard from './ProductCard.vue'
+import Checkout from './Checkout.vue'
 
 export default {
   components: {
-    ProductCard
+    ProductCard,
+    Checkout
   },
   data: () => ({
     cards: [
@@ -62,8 +85,23 @@ export default {
         src: "https://cdn.vuetifyjs.com/images/cards/house.jpg"
       }
     ],
-    productSale: []
-  })
+    selected: [],
+    checkout: false
+  }),
+  computed: {
+    // items() {
+    //   console.log(this.selected)
+    //   return this.selected
+    // }
+  },
+  methods: {
+	add() {
+    this.checkout = true
+  },
+  back() {
+    this.checkout = false
+  }
+  }
 };
 </script>
 

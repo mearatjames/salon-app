@@ -1,5 +1,6 @@
 <template>
-  <v-card min-height="100%">
+  <v-item v-slot:default="{ active, toggle }">
+  <v-card :outlined="active" :ripple="false" :class="active ? 'selected' : ''" class="product-card text-center" @click="toggle" min-height="100%">
     <v-img
       :src="card.src"
       class="white--text align-end product-image"
@@ -7,27 +8,19 @@
       cover
     >
     </v-img>
-     <v-card-title class="pt-1" v-text="card.title"></v-card-title>
+     <v-card-title class="pt-1 justify-center text-subtitle-1" v-text="card.title"></v-card-title>
       <v-card-subtitle class="pb-0" v-text="`$${card.price}`"></v-card-subtitle>
     <div class="text-center button-container">
-      <v-btn class="minus" @click="subtract" rounded medium color="red lighten-5" dark>
-        <v-icon color="red darken-2">mdi-minus</v-icon>
-      </v-btn>
-      <v-avatar class="qty elevation-2" color="#1F7087" size="62">
-        <span class="white--text headline">{{counter}}</span>
-      </v-avatar>
-      <v-btn class="plus" @click="add" rounded medium color="teal lighten-5" dark>
-        <v-icon color="teal darken-2">mdi-plus</v-icon>
-      </v-btn>
     </div>
   </v-card>
+  </v-item>
 </template>
 
 <script>
 export default {
   name: "ProductCard",
   props: {
-    card: Object
+    card: Object,
   },
   data: () => ({
 	counter: 0
@@ -47,7 +40,21 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
+
+div.product-card.v-card {
+  border-radius: 18px;
+}
+
+.v-card--link:focus:before {
+   opacity: 0;
+}
+
+.selected {
+  box-shadow: 0 0 0 2px teal;
+  background-color: rgba(6, 247, 247, 0.084);
+}
+
 .button-container {
   display: flex;
   justify-content: center;
