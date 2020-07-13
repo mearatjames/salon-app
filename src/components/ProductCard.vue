@@ -2,14 +2,14 @@
   <v-item v-slot:default="{ active, toggle }">
   <v-card :outlined="active" :ripple="false" :class="active ? 'selected' : ''" class="product-card text-center" @click="toggle" min-height="100%">
     <v-img
-      :src="card.src"
+      :src="product.image"
       class="white--text align-end product-image"
       gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
       cover
     >
     </v-img>
-     <v-card-title class="pt-1 justify-center text-subtitle-1" v-text="card.title"></v-card-title>
-      <v-card-subtitle class="pb-0" v-text="`$${card.price}`"></v-card-subtitle>
+     <v-card-title class="pt-1 justify-center text-subtitle-1" v-text="product.name"></v-card-title>
+      <v-card-subtitle class="pb-0" v-text="`$${product.price}`"></v-card-subtitle>
     <div class="text-center button-container">
     </div>
   </v-card>
@@ -20,7 +20,7 @@
 export default {
   name: "ProductCard",
   props: {
-    card: Object,
+    product: Object,
   },
   data: () => ({
 	counter: 0
@@ -28,12 +28,12 @@ export default {
   methods: {
 	add() {
 		this.counter++
-		this.$emit("updateCounter", {qty: this.counter, sku: this.card.sku});
+		this.$emit("updateCounter", {qty: this.counter, sku: this.product.sku});
 	},
 	subtract() {
 		if (this.counter > 0) {
 			this.counter--
-			this.$emit("updateCounter", {qty: this.counter, sku: this.card.sku})	
+			this.$emit("updateCounter", {qty: this.counter, sku: this.product.sku})	
 		}
 	}
   }

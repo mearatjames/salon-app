@@ -36,6 +36,7 @@
         </v-menu>
       </div>
     </div>
+	<div v-for="product in selectedProducts" :key="product.sku">
     <v-row dense>
       <v-col cols="12">
         <v-card class="checkout-card">
@@ -44,12 +45,12 @@
               <v-avatar size="150" tile>
                 <v-img
                   class="product-image"
-                  src="https://cdn.vuetifyjs.com/images/cards/halcyon.png"
+                  :src="product.image"
                 >
                   <v-row align="end" class="white--text product-dsc">
                     <v-col class="pb-1">
-                      <div class="subheading">Removal Kit</div>
-                      <div class="body-1">$10</div>
+                      <div class="subheading">{{product.name}}</div>
+                      <div class="body-1">{{product.price}}</div>
                     </v-col>
                   </v-row>
                 </v-img>
@@ -78,6 +79,7 @@
         </v-card>
       </v-col>
     </v-row>
+	</div>
     <v-row dense>
       <v-col cols="12">
         <v-card class="checkout-card">
@@ -156,6 +158,9 @@
 
 <script>
 export default {
+	props: {
+    selectedProducts: Array,
+  },
   data: () => ({
     qty: 1,
     datePicker: false,
@@ -181,6 +186,7 @@ div.v-card.checkout-card {
   position: relative;
   width: 100%;
   height: 60px;
+  margin-bottom: 40px;
 }
 .checkout-btn {
   position: fixed;
