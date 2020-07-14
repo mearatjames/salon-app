@@ -47,8 +47,6 @@
 </template>
 
 <script>
-import firebase from "firebase/app";
-import "firebase/storage";
 import db from "./firebaseInit";
 import ProductCard from "./ProductCard.vue";
 import Checkout from "./Checkout.vue";
@@ -66,27 +64,16 @@ export default {
   created() {
     db.collection("products")
       .where("active", "==", true)
-      .orderBy("name", "asc")
+      .orderBy("name")
       .get()
       .then(querySnapshot => {
-        let storageRef = firebase.storage().ref();
-        querySnapshot.forEach(async doc => {
+        querySnapshot.forEach(doc => {
           let data = doc.data();
-          let url = await storageRef
-            .child("products/" + doc.id + "/card.jpg")
-            .getDownloadURL()
-            .then(url => {
-              return url;
-            })
-            .catch(error => {
-              console.log(error);
-            });
-
           this.products.push({
             name: data.name,
             price: data.price,
             sku: data["SKU"],
-            image: url
+            image: `https://firebasestorage.googleapis.com/v0/b/salon-app-d6c37.appspot.com/o/products%2F${doc.id}%2Fcard.jpg?alt=media`
           });
         });
       });

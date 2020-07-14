@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="d-flex justify-space-between align-center">
+    <div class="d-flex justify-space-between align-top">
       <v-btn class="pl-0" @click="$emit('back')" text>
         <v-icon class="mr-1">mdi-arrow-left</v-icon>Back
       </v-btn>
@@ -17,7 +17,7 @@
         >
           <template v-slot:activator="{ on }">
             <v-text-field
-				class="date"
+              class="date pt-0"
               v-model="date"
               color="teal"
               readonly
@@ -36,50 +36,47 @@
         </v-menu>
       </div>
     </div>
-	<div v-for="product in selectedProducts" :key="product.sku">
-    <v-row dense>
-      <v-col cols="12">
-        <v-card class="checkout-card">
-          <div class="d-flex flex-no-wrap justify-space-between align-center">
-            <div>
-              <v-avatar size="150" tile>
-                <v-img
-                  class="product-image"
-                  :src="product.image"
-                >
-                  <v-row align="end" class="white--text product-dsc">
-                    <v-col class="pb-1">
-                      <div class="subheading">{{product.name}}</div>
-                      <div class="body-1">{{product.price}}</div>
-                    </v-col>
-                  </v-row>
-                </v-img>
-              </v-avatar>
+    <div v-for="product in selectedProducts" :key="product.sku">
+      <v-row dense>
+        <v-col cols="12">
+          <v-card class="checkout-card">
+            <div class="d-flex flex-no-wrap justify-space-between align-center">
+              <div>
+                <v-avatar size="150" tile>
+                  <v-img class="product-image" :src="product.image">
+                    <v-row align="end" class="white--text product-dsc">
+                      <v-col class="pb-1">
+                        <div class="subheading">{{product.name}}</div>
+                        <div class="body-1">{{`$${product.price}`}}</div>
+                      </v-col>
+                    </v-row>
+                  </v-img>
+                </v-avatar>
+              </div>
+              <div>
+                <v-text-field
+                  class="qty"
+                  v-model="qty"
+                  color="teal"
+                  label="QTY"
+                  required
+                  type="number"
+                  inputmode="decimal"
+                ></v-text-field>
+              </div>
+              <div>
+                <div class="pr-5">$10</div>
+              </div>
             </div>
-            <div>
-              <v-text-field
-                class="qty"
-                v-model="qty"
-                color="teal"
-                label="QTY"
-                required
-                type="number"
-                inputmode="decimal"
-              ></v-text-field>
+            <div class="remove">
+              <v-btn text x-small fab>
+                <v-icon @click="remove">mdi-close</v-icon>
+              </v-btn>
             </div>
-            <div>
-              <div class="pr-5">$10</div>
-            </div>
-          </div>
-          <div class="remove">
-            <v-btn text x-small fab>
-              <v-icon @click="remove">mdi-close</v-icon>
-            </v-btn>
-          </div>
-        </v-card>
-      </v-col>
-    </v-row>
-	</div>
+          </v-card>
+        </v-col>
+      </v-row>
+    </div>
     <v-row dense>
       <v-col cols="12">
         <v-card class="checkout-card">
@@ -158,8 +155,8 @@
 
 <script>
 export default {
-	props: {
-    selectedProducts: Array,
+  props: {
+    selectedProducts: Array
   },
   data: () => ({
     qty: 1,
@@ -219,6 +216,6 @@ div.v-card.checkout-card {
   width: 40px;
 }
 .date {
-	width: 120px;
+  width: 120px;
 }
 </style>
