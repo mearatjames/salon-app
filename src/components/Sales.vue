@@ -38,10 +38,9 @@
           </v-badge>
         </v-btn>
       </v-card-text>
-      <!-- <div>{{items}}</div> -->
     </div>
     <div v-else>
-      <Checkout :selectedProducts="items" v-on:back="back" />
+      <Checkout v-on:remove="remove" v-on:updateQty="updateQty" :selectedProducts="items" v-on:back="back" />
     </div>
   </v-container>
 </template>
@@ -59,7 +58,7 @@ export default {
   data: () => ({
     products: [],
     selected: [],
-    checkout: false
+    checkout: false,
   }),
   created() {
     db.collection("products")
@@ -72,6 +71,7 @@ export default {
           this.products.push({
             name: data.name,
             price: data.price,
+            qty: 1,
             sku: data["SKU"],
             image: `https://firebasestorage.googleapis.com/v0/b/salon-app-d6c37.appspot.com/o/products%2F${doc.id}%2Fcard.jpg?alt=media`
           });
@@ -93,6 +93,13 @@ export default {
     },
     back() {
       this.checkout = false;
+    },
+    remove(index) {
+      this.items[index].qty = 1
+      this.selected.splice(index, 1)
+    },
+    updateQty(index, qty) {
+      console.log(index, qty)
     }
   }
 };

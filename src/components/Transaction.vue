@@ -1,7 +1,7 @@
 <template>
   <div>
     <v-form ref="form">
-      <v-card max-width="450" :elevation="12" class="transaction-card">
+      <v-card max-width="450" :elevation="4" class="transaction-card">
         <v-img v-if="modify" class="white--text title-edit align-end" height="65px">
           <div class="title-flex">
             <v-card-title>Modify Transaction</v-card-title>
@@ -82,6 +82,7 @@
               required
               prefix="$"
               type="number"
+              min="0"
               inputmode="decimal"
             >{{price}}</v-text-field>
             <v-text-field
@@ -93,6 +94,7 @@
               prefix="$"
               required
               type="number"
+              min="0"
               inputmode="decimal"
             >{{tips}}</v-text-field>
             <v-row justify="center">

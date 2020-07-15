@@ -18,7 +18,7 @@
           <template v-slot:activator="{ on }">
             <v-text-field
               class="date pt-0"
-              v-model="date"
+              v-model="formattedDate"
               color="teal"
               readonly
               prepend-icon="event"
@@ -36,7 +36,7 @@
         </v-menu>
       </div>
     </div>
-    <div v-for="product in selectedProducts" :key="product.sku">
+    <div v-for="(product, index) in selectedProducts" :key="product.sku">
       <v-row dense>
         <v-col cols="12">
           <v-card class="checkout-card">
@@ -47,7 +47,12 @@
                     <v-row align="end" class="white--text product-dsc">
                       <v-col class="pb-1">
                         <div class="subheading">{{product.name}}</div>
-                        <div class="body-1">{{`$${product.price}`}}</div>
+                        <div class="body-1">
+                          {{new Intl.NumberFormat('en-US', {
+                          style: 'currency',
+                          currency: 'USD',
+                          }).format(product.price)}}
+                        </div>
                       </v-col>
                     </v-row>
                   </v-img>
@@ -56,8 +61,10 @@
               <div>
                 <v-text-field
                   class="qty"
-                  v-model="qty"
+                  v-model="product.qty"
                   color="teal"
+                  min="0"
+                  max="200"
                   label="QTY"
                   required
                   type="number"
@@ -65,75 +72,51 @@
                 ></v-text-field>
               </div>
               <div>
-                <div class="pr-5">$10</div>
+                <div class="pr-5">
+                  {{new Intl.NumberFormat('en-US', {
+                  style: 'currency',
+                  currency: 'USD',
+                  }).format(product.price * product.qty)}}
+                </div>
               </div>
             </div>
             <div class="remove">
               <v-btn text x-small fab>
-                <v-icon @click="remove">mdi-close</v-icon>
+                <v-icon @click="remove(index)">mdi-close</v-icon>
               </v-btn>
             </div>
           </v-card>
         </v-col>
       </v-row>
     </div>
-    <v-row dense>
-      <v-col cols="12">
-        <v-card class="checkout-card">
-          <div class="d-flex flex-no-wrap justify-space-between align-center">
-            <div>
-              <v-avatar size="150" tile>
-                <v-img
-                  class="product-image"
-                  src="https://cdn.vuetifyjs.com/images/cards/halcyon.png"
-                >
-                  <v-row align="end" class="white--text product-dsc">
-                    <v-col class="pb-1">
-                      <div class="subheading">Removal Kit</div>
-                      <div class="body-1">$10</div>
-                    </v-col>
-                  </v-row>
-                </v-img>
-              </v-avatar>
-            </div>
-            <div>
-              <v-text-field
-                class="qty"
-                v-model="qty"
-                color="teal"
-                label="QTY"
-                required
-                type="number"
-                inputmode="decimal"
-              ></v-text-field>
-            </div>
-            <div>
-              <div class="pr-5">$10</div>
-            </div>
-          </div>
-          <div class="remove">
-            <v-btn text x-small fab>
-              <v-icon @click="remove">mdi-close</v-icon>
-            </v-btn>
-          </div>
-        </v-card>
-      </v-col>
-    </v-row>
     <div class="pt-2">
       <v-divider></v-divider>
       <v-row justify="space-between">
         <v-col class="pl-5 py-1 text-caption" cols="4">Subtotal</v-col>
-        <v-col class="text-right text-caption py-1 pr-8" cols="4">$20</v-col>
+        <v-col class="text-right text-caption py-1 pr-8" cols="4">
+          {{new Intl.NumberFormat('en-US', {
+          style: 'currency',
+          currency: 'USD',
+          }).format(subtotal)}}
+        </v-col>
       </v-row>
       <v-row justify="space-between">
         <v-col class="pl-5 py-1 text-caption" cols="4">
-          <a>Add discount</a>
+          <!-- <a>Add discount</a> -->
         </v-col>
         <v-col class="text-right py-1 pr-8 text-caption" cols="4"></v-col>
       </v-row>
       <v-row justify="space-between">
-        <v-col class="pl-5 py-1" cols="4">Total</v-col>
-        <v-col class="text-right py-1 pr-8" cols="4">$20</v-col>
+        <v-col class="pl-5 py-1" cols="4"><h3>Total</h3></v-col>
+        <v-col class="text-right py-1 pr-8" cols="4">
+			<h3>
+
+          {{new Intl.NumberFormat('en-US', {
+          style: 'currency',
+          currency: 'USD',
+          }).format(subtotal - discount)}}
+			</h3>
+        </v-col>
       </v-row>
     </div>
     <v-row>
@@ -142,7 +125,7 @@
           <v-btn
             class="checkout-btn"
             width="80%"
-            max-width="360px"
+            max-width="340px"
             rounded
             dark
             color="teal"
@@ -161,11 +144,25 @@ export default {
   data: () => ({
     qty: 1,
     datePicker: false,
+    discount: 0,
     date: new Date().toLocaleDateString("fr-CA")
   }),
   methods: {
-    remove() {
-      console.log("click");
+    remove(index) {
+      console.log(index);
+      this.$emit("remove", index);
+    }
+  },
+  computed: {
+    formattedDate() {
+      return new Date(this.date).toLocaleDateString("en-US");
+    },
+    subtotal() {
+      let total = 0;
+      this.selectedProducts.forEach(e => {
+        total += e.price * e.qty;
+      });
+      return total;
     }
   }
 };
@@ -198,9 +195,9 @@ div.v-card.checkout-card {
   left: 0;
   background-image: linear-gradient(
     180deg,
-    rgba(255, 255, 255, 0) 38%,
-    rgba(0, 0, 0, 0.5942752100840336) 66%,
-    rgba(0, 0, 0, 0.7931547619047619) 79%
+    rgba(255, 255, 255, 0) 0%,
+    rgba(0, 0, 0, 0.6) 75%,
+    rgba(0, 0, 0, 0.9) 100%
   );
   opacity: 0.85;
 }
@@ -213,7 +210,7 @@ div.v-card.checkout-card {
   top: 5px;
 }
 .qty {
-  width: 40px;
+  width: fit-content;
 }
 .date {
   width: 120px;
