@@ -4,7 +4,7 @@
     <v-img
       :src="product.image"
       class="white--text align-end product-image"
-      gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
+      gradient="to bottom, rgba(0,0,0,.01), rgba(0,0,0,.08)"
       cover
     >
     </v-img>

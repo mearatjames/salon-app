@@ -82,6 +82,7 @@
               required
               prefix="$"
               type="number"
+              maxlength="6"
               min="0"
               inputmode="decimal"
             >{{price}}</v-text-field>
@@ -94,6 +95,7 @@
               prefix="$"
               required
               type="number"
+              maxlength="6"
               min="0"
               inputmode="decimal"
             >{{tips}}</v-text-field>
@@ -265,7 +267,6 @@ export default {
           this.transaction.date
         )
       };
-      console.log(deleteItem);
       db.collection("transactions")
         .doc(this.transaction.id)
         .delete()
