@@ -118,6 +118,7 @@
                     @click="updateSplit()"
                     :disabled="slider == split"
                     color="teal"
+                    rounded
                     class="update"
                     small
                   >Update</v-btn>
@@ -159,8 +160,37 @@
             </v-list-item-content>
           </v-list-item>
         </v-list>
-       
+    <v-card color="teal lighten-5" class="mb-3 pa-3 rounded-lg">
+      <div class="text-subtitle-1 text--primary">{{`Total Sales: ${new Intl.NumberFormat('en-US', {
+                style: 'currency',
+                currency: 'USD',
+                }).format(200)}`}}</div>
+      <v-chip
+      class="ma-2"
+      color="teal"
+      text-color="white"
+    >
+      50 Removal Kits 
+    </v-chip>
+
+    <v-chip
+      class="ma-2"
+      color="teal"
+      text-color="white"
+    >
+      10 Acetones
+    </v-chip>
+
+    <v-chip
+      class="ma-2"
+      color="teal"
+      text-color="white"
+    >
+      5 Cuticle Oils
+    </v-chip>
+    </v-card>
       </v-sheet>
+      
     </v-sheet>
   </div>
 </template>
@@ -365,4 +395,5 @@ export default {
   z-index: 2;
   color: white;
 }
+
 </style>

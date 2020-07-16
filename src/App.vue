@@ -13,8 +13,10 @@
       <v-btn v-if="isLoggedIn" v-on:click="logout" depressed text medium>Logout</v-btn>
     </v-app-bar>
     <NavDrawer></NavDrawer>
-    <v-main class="padding">
+    <v-main >
+        <div class="padding">
         <router-view :thumbnail="thumbnail" v-on:updateThumbnail="updateThumbnail"></router-view>
+        </div>
     </v-main>
     <BottomNav />
   </v-app>
@@ -113,7 +115,7 @@ body {
 }
 
 @media only screen and (max-width: 1068px) {
-  .padding {
+  .v-main div.padding {
     padding-bottom: 70px;
   }
 }

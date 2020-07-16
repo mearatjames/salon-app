@@ -78,7 +78,7 @@
        <v-btn @click="generateReport" color="teal" rounded dark>Generate Report</v-btn>
       </div>
       <div class="px-5">
-        <v-alert outlined icon="mdi-google-downasaur" prominent border="left" v-if="empty">
+        <v-alert color="teal" outlined icon="mdi-google-downasaur" prominent border="left" v-if="empty">
           <div class="title">No Transaction Found</div>
         </v-alert>
       </div>

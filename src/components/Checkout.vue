@@ -38,6 +38,19 @@
           </v-menu>
         </div>
       </div>
+      <v-row>
+        <v-col cols="12" v-show="selectedProducts.length == 0">
+          <v-alert
+      color="teal"
+      border="left"
+      elevation="2"
+      colored-border
+      icon="mdi-cart-outline"
+    >
+      No items in the cart.
+    </v-alert>
+        </v-col>
+      </v-row>
       <div v-for="(product, index) in selectedProducts" :key="product.sku">
         <v-row dense>
           <v-col cols="12">
@@ -97,8 +110,8 @@
       <div class="pt-2">
         <v-divider></v-divider>
         <v-row justify="space-between">
-          <v-col class="pl-5 py-1" cols="4">Subtotal</v-col>
-          <v-col class="text-right py-1 pr-8" cols="4">
+          <v-col class="pl-5 pt-3" cols="4">Subtotal</v-col>
+          <v-col class="text-right pt-3 pr-8" cols="4">
             {{new Intl.NumberFormat('en-US', {
             style: 'currency',
             currency: 'USD',
@@ -129,7 +142,7 @@
         <v-col cols="12">
           <div class="text-center checkout-btn-container">
             <v-btn
-              :disabled="!valid"
+              :disabled="!valid || selectedProducts.length == 0"
               class="checkout-btn"
               width="80%"
               max-width="340px"
