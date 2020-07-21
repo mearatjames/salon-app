@@ -1,20 +1,23 @@
 <template>
   <v-container class="container" fluid>
-    <!-- <v-row>
-        <v-col cols="12">
-          <v-card
-            color="#1F7087"
-            dark
-          >
-            <v-card-title class="headline">Product Sales</v-card-title>
-            <v-card-subtitle>Total Sales so far</v-card-subtitle>
-            <v-card-actions>
-              <v-btn text>Update Products</v-btn>
-            </v-card-actions>
-          </v-card>
-        </v-col>
-    </v-row>-->
     <div v-if="!checkout">
+    <v-row>
+        <v-col cols="12">
+          <v-expansion-panels dark >
+          <v-expansion-panel >
+        <v-expansion-panel-header color="teal darken-1" class="text-h6 white--text">{{`Today Sales: ${new Intl.NumberFormat('en-US', {
+                  style: 'currency',
+                  currency: 'USD',
+                  }).format(today.total)}`}}</v-expansion-panel-header>
+        <v-expansion-panel-content color="teal darken-1">
+          <ul class="today-list">
+                <li v-for="item in today.items" :key="item.name">{{`${item.name}: ${item.qty} `}}</li>
+              </ul>
+        </v-expansion-panel-content>
+      </v-expansion-panel>
+      </v-expansion-panels>
+        </v-col>
+    </v-row>
       <v-item-group v-model="selected" multiple>
         <v-row dense>
           <v-col cols="6" lg="3" md="6" sm="6" v-for="product in products" :key="product.sku">
@@ -40,7 +43,7 @@
       </v-card-text>
     </div>
     <div v-else>
-      <Checkout v-on:remove="remove" v-on:updateQty="updateQty" :selectedProducts="items" v-on:back="back" />
+      <Checkout v-on:remove="remove" v-on:cleanup="cleanup" v-on:updateQty="updateQty" :selectedProducts="items" v-on:back="back" />
     </div>
   </v-container>
 </template>
@@ -59,8 +62,12 @@ export default {
     products: [],
     selected: [],
     checkout: false,
+    today: {total: 0, items: {}},
+    date: new Date().toLocaleDateString("fr-CA"),
+    user: JSON.parse(localStorage.getItem("user"))
   }),
   created() {
+    this.getSnapshot()
     db.collection("products")
       .where("active", "==", true)
       .orderBy("name")
@@ -73,6 +80,7 @@ export default {
             price: data.price,
             qty: 1,
             sku: data["SKU"],
+            id: doc.id,
             image: `https://firebasestorage.googleapis.com/v0/b/salon-app-d6c37.appspot.com/o/products%2F${doc.id}%2Fcard.jpg?alt=media`
           });
         });
@@ -85,7 +93,7 @@ export default {
         selectedProducts.push(this.products[e])
       })
       return selectedProducts
-    }
+    },
   },
   methods: {
     add() {
@@ -93,10 +101,34 @@ export default {
     },
     back() {
       this.checkout = false;
+      this.today = {total: 0, items: {}},
+      this.getSnapshot()
     },
     remove(index) {
       this.items[index].qty = 1
       this.selected.splice(index, 1)
+    },
+    cleanup() {
+      this.selected = []
+      this.back()
+    },
+    getSnapshot() {
+      db.collection("sales")
+      .where("user", "==", db.collection("users").doc(this.user.email))
+      .where("date", ">=", new Date(this.date))
+      .get()
+      .then(querySnapshot => {
+        querySnapshot.forEach(doc => {
+          let data = doc.data();
+         data.items.forEach(e => {
+           this.today.total += parseInt(e.qty) * parseInt(e.price)
+           !this.today.items[e.id] ? this.today.items[e.id] = { name: e.name, qty: e.qty } : this.today.items[e.id].qty += e.qty           
+         })
+          data.discount ? this.today.total - data.discount : this.today.total
+        });
+
+        console.log(this.today)
+      });
     },
     updateQty(index, qty) {
       console.log(index, qty)
@@ -105,8 +137,11 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .sell {
   bottom: 80px;
+}
+.today-list {
+  list-style: none;
 }
 </style>

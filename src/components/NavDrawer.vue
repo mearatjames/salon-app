@@ -35,10 +35,13 @@ export default {
           link: "/add"
         },
         { title: "List", icon: "mdi-view-list", link: "/list" },
-        { title: "Sales", icon: "mdi-basket-outline", link: "/sales" }
       ],
-      right: null
+      right: null,
+      user: JSON.parse(localStorage.getItem("user"))
     };
+  },
+  created() {
+    this.user.sale ? this.items.push({ title: "Sales", icon: "mdi-basket-outline", link: "/sales" }) : ""
   }
 };
 </script>

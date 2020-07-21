@@ -10,7 +10,7 @@
             ref="datePicker"
             color="teal"
             v-model="datePicker"
-            :close-on-content-click="false"
+            :close-on-content-click="true"
             transition="scale-transition"
             offset-y
             max-width="290px"
@@ -41,14 +41,12 @@
       <v-row>
         <v-col cols="12" v-show="selectedProducts.length == 0">
           <v-alert
-      color="teal"
-      border="left"
-      elevation="2"
-      colored-border
-      icon="mdi-cart-outline"
-    >
-      No items in the cart.
-    </v-alert>
+            color="teal"
+            border="left"
+            elevation="2"
+            colored-border
+            icon="mdi-cart-outline"
+          >No items in the cart.</v-alert>
         </v-col>
       </v-row>
       <div v-for="(product, index) in selectedProducts" :key="product.sku">
@@ -148,6 +146,7 @@
               max-width="340px"
               rounded
               :dark="valid"
+              @click="submit"
               type="submit"
               color="teal"
             >Confirm Sale</v-btn>
@@ -155,15 +154,26 @@
         </v-col>
       </v-row>
     </v-form>
+    <v-dialog v-model="dialog" hide-overlay persistent width="300">
+      <v-card color="teal" dark>
+        <v-card-text>
+          Submitting
+          <v-progress-linear indeterminate color="white" class="mb-0"></v-progress-linear>
+        </v-card-text>
+      </v-card>
+    </v-dialog>
   </div>
 </template>
 
 <script>
+import db from "./firebaseInit";
+
 export default {
   props: {
     selectedProducts: Array
   },
   data: () => ({
+    dialog: false,
     valid: false,
     qty: 1,
     datePicker: false,
@@ -173,12 +183,36 @@ export default {
       v => v > 0 || "Qty can't be 0",
       v => v < 500 || "Qty is too high"
     ],
-    date: new Date().toLocaleDateString("fr-CA")
+    date: new Date().toLocaleDateString("fr-CA"),
+    user: JSON.parse(localStorage.getItem("user")).email
   }),
   methods: {
     remove(index) {
-      console.log(index);
       this.$emit("remove", index);
+    },
+    submit(e) {
+      e.preventDefault();
+      this.dialog = true;
+      this.valid = false;
+      let extracted = this.selectedProducts.map(item => {
+        return { 'price': parseFloat(item.price), 'qty': parseInt(item.qty), 'id': item.id, 'name': item.name}
+      }
+        )
+      let data = {
+        date: new Date(this.date),
+        discount: this.discount,
+        user: db.doc(`/users/${this.user}`),
+        items: extracted
+      };
+      console.log(data)
+      db.collection("sales")
+        .add(data)
+        .then(() => {
+          this.$emit('cleanup')
+        })
+        .catch(error => {
+          console.error("Error adding document: ", error);
+        });
     }
   },
   computed: {

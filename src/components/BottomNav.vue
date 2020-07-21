@@ -12,7 +12,7 @@
       <span>List</span>
       <v-icon>mdi-view-list</v-icon>
     </v-btn>
-    <v-btn to="/sales" exact>
+    <v-btn v-if="user.sale" to="/sales" exact>
       <span>Sales</span>
       <v-icon>mdi-basket-outline</v-icon>
     </v-btn>
@@ -21,9 +21,9 @@
 
 <script>
 export default {
-  data() {
-    return {};
-  }
+  data: () => ({
+    user: JSON.parse(localStorage.getItem("user"))
+  }),
 };
 </script>
 

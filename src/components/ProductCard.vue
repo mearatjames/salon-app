@@ -47,7 +47,7 @@ div.product-card.v-card {
 }
 
 .selected {
-  box-shadow: 0 0 0 2px teal;
+  /* box-shadow: 0 0 0 2px teal; */
   background-color: rgba(6, 247, 247, 0.084);
 }
 

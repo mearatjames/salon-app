@@ -173,7 +173,8 @@ export default {
                   JSON.stringify({
                     email: data.user.email,
                     uid: firebase.auth().currentUser.uid,
-                    name: querySnapshot.data().firstname
+                    name: querySnapshot.data().firstname,
+                    sale: querySnapshot.data().sale
                   })
                 );
                 location.reload(true);
