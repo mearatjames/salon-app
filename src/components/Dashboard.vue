@@ -7,7 +7,7 @@
             :disabled="progress"
             :ripple="false"
             class="z-index"
-            @click="switcher=false"
+            @click="switcher = false"
             text
             rounded
             width="140px"
@@ -20,7 +20,7 @@
             :disabled="progress"
             :ripple="false"
             class="z-index"
-            @click="switcher=true"
+            @click="switcher = true"
             text
             rounded
             width="140px"
@@ -28,7 +28,7 @@
             dark
           >Date Range</v-btn>
         </li>
-        <div class="animate" v-bind:class="{'animate-right': switcher}"></div>
+        <div class="animate" v-bind:class="{ 'animate-right': switcher }"></div>
       </ul>
     </div>
     <DateRangePicker v-on:updateDates="updateDates" v-bind:initDates="initDates" v-if="switcher"></DateRangePicker>
@@ -65,9 +65,11 @@
       ></v-date-picker>
     </v-menu>
     <v-sheet color="teal lighten-5">
-      <v-subheader
-        class="teal--text text--darken-2"
-      >{{switcher ? `DATE RANGE SNAPSHOT` : 'MONTHLY SNAPSHOT'}}</v-subheader>
+      <v-subheader class="teal--text text--darken-2">
+        {{
+        switcher ? `DATE RANGE SNAPSHOT` : "MONTHLY SNAPSHOT"
+        }}
+      </v-subheader>
       <v-sheet>
         <v-list>
           <v-list-item>
@@ -77,7 +79,7 @@
 
             <v-list-item-content>
               <v-list-item-subtitle>Customers</v-list-item-subtitle>
-              <v-list-item-title>{{total.customer}}</v-list-item-title>
+              <v-list-item-title>{{ total.customer }}</v-list-item-title>
             </v-list-item-content>
           </v-list-item>
           <v-list-item>
@@ -88,10 +90,12 @@
             <v-list-item-content>
               <v-list-item-subtitle>Total</v-list-item-subtitle>
               <v-list-item-title>
-                {{new Intl.NumberFormat('en-US', {
-                style: 'currency',
-                currency: 'USD',
-                }).format(total.beforeSplit)}}
+                {{
+                new Intl.NumberFormat("en-US", {
+                style: "currency",
+                currency: "USD",
+                }).format(total.beforeSplit)
+                }}
               </v-list-item-title>
             </v-list-item-content>
           </v-list-item>
@@ -101,12 +105,14 @@
                 <v-icon class="green white--text">mdi-cash</v-icon>
               </v-list-item-avatar>
               <v-list-item-content>
-                <v-list-item-subtitle>My Split ({{split}}%)</v-list-item-subtitle>
+                <v-list-item-subtitle>My Split ({{ split }}%)</v-list-item-subtitle>
                 <v-list-item-title>
-                  {{new Intl.NumberFormat('en-US', {
-                  style: 'currency',
-                  currency: 'USD',
-                  }).format(total.mySplit)}}
+                  {{
+                  new Intl.NumberFormat("en-US", {
+                  style: "currency",
+                  currency: "USD",
+                  }).format(total.mySplit)
+                  }}
                 </v-list-item-title>
               </v-list-item-content>
             </template>
@@ -118,6 +124,7 @@
                     @click="updateSplit()"
                     :disabled="slider == split"
                     color="teal"
+                    rounded
                     class="update"
                     small
                   >Update</v-btn>
@@ -136,10 +143,12 @@
             <v-list-item-content>
               <v-list-item-subtitle>Tips</v-list-item-subtitle>
               <v-list-item-title>
-                {{new Intl.NumberFormat('en-US', {
-                style: 'currency',
-                currency: 'USD',
-                }).format(total.tips)}}
+                {{
+                new Intl.NumberFormat("en-US", {
+                style: "currency",
+                currency: "USD",
+                }).format(total.tips)
+                }}
               </v-list-item-title>
             </v-list-item-content>
           </v-list-item>
@@ -151,15 +160,35 @@
             <v-list-item-content>
               <v-list-item-subtitle>My Split + Tips</v-list-item-subtitle>
               <v-list-item-title>
-                {{new Intl.NumberFormat('en-US', {
-                style: 'currency',
-                currency: 'USD',
-                }).format(total.mySplit + total.tips)}}
+                {{
+                new Intl.NumberFormat("en-US", {
+                style: "currency",
+                currency: "USD",
+                }).format(total.mySplit + total.tips)
+                }}
               </v-list-item-title>
             </v-list-item-content>
           </v-list-item>
         </v-list>
-       
+        <v-card v-if="user.sale" color="teal lighten-5" class="mb-3 pa-3 rounded-lg">
+          <div class="text-subtitle-1 text--primary font-weight-medium">
+            {{
+            `Total Sales: ${new Intl.NumberFormat("en-US", {
+            style: "currency",
+            currency: "USD",
+            }).format(totalSale.total)}`
+            }}
+          </div>
+          <template v-for="item in totalSale.items">
+          <div :key="item.name" class="px-1 text-body-2 d-flex justify-space-between">
+            <span>{{`${item.name}: ${item.qty}`}}</span>
+            <span>{{new Intl.NumberFormat("en-US", {
+            style: "currency",
+            currency: "USD",
+            }).format(item.total)}}</span>
+          </div>
+          </template>
+        </v-card>
       </v-sheet>
     </v-sheet>
   </div>
@@ -172,7 +201,7 @@ import DateRangePicker from "./DateRangePicker.vue";
 export default {
   name: "Dashboard",
   components: {
-    DateRangePicker
+    DateRangePicker,
   },
   data: () => ({
     initDates: [],
@@ -188,16 +217,18 @@ export default {
       beforeSplit: 0,
       mySplit: 0,
       salonSplit: 0,
-      customer: 0
+      customer: 0,
     },
     totalDateRange: {
       tips: 0,
       beforeSplit: 0,
       mySplit: 0,
       salonSplit: 0,
-      customer: 0
+      customer: 0,
     },
-    user: JSON.parse(localStorage.getItem("user"))
+    sale: { total: 0, items: {} },
+    saleRange: { total: 0, items: {} },
+    user: JSON.parse(localStorage.getItem("user")),
   }),
   computed: {
     formatMonth() {
@@ -205,7 +236,7 @@ export default {
         ? new Intl.DateTimeFormat("en-US", {
             month: "long",
             year: "numeric",
-            timeZone: "UTC"
+            timeZone: "UTC",
           }).format(new Date(this.date))
         : "";
     },
@@ -217,13 +248,20 @@ export default {
         this.splitCal(this.totalMonth);
         return this.totalMonth;
       }
+    },
+    totalSale() {
+      if (this.switcher) {
+        return this.saleRange;
+      } else {
+        return this.sale;
+      }
     }
   },
   created() {
     db.collection("users")
       .doc(this.user.email)
       .get()
-      .then(querySnapshot => {
+      .then((querySnapshot) => {
         this.split = querySnapshot.data().split;
         this.slider = querySnapshot.data().split;
       });
@@ -232,12 +270,12 @@ export default {
       .where("date", ">=", new Date(this.date))
       .orderBy("date", "desc")
       .get()
-      .then(querySnapshot => {
+      .then((querySnapshot) => {
         this.aggregate(querySnapshot, this.totalMonth);
       });
+    this.user.sale ? this.getSales(0) : null;
   },
   methods: {
-    
     splitCal(total) {
       total.mySplit = Math.round(total.beforeSplit * this.split * 0.01);
       total.salonSplit = total.beforeSplit - total.mySplit;
@@ -248,20 +286,21 @@ export default {
       }
       if (dates.length == 1) {
         this.initDates = dates;
-        this.listRange = []
+        this.listRange = [];
         this.reset(this.totalDateRange);
         this.progress = true;
         db.collection("transactions")
           .where("user", "==", db.collection("users").doc(this.user.email))
           .where("date", "==", new Date(dates[0]))
           .get()
-          .then(querySnapshot => {
+          .then((querySnapshot) => {
             this.aggregate(querySnapshot, this.totalDateRange);
           });
+        this.user.sale ? this.getSales(2, dates) : null;
       } else {
         this.initDates = dates;
         this.reset(this.totalDateRange);
-        this.listRange = []
+        this.listRange = [];
         this.progress = true;
         db.collection("transactions")
           .where("user", "==", db.collection("users").doc(this.user.email))
@@ -269,9 +308,10 @@ export default {
           .where("date", "<=", new Date(dates[1]))
           .orderBy("date", "desc")
           .get()
-          .then(querySnapshot => {
+          .then((querySnapshot) => {
             this.aggregate(querySnapshot, this.totalDateRange);
           });
+        this.user.sale ? this.getSales(3, dates) : null;
       }
     },
     updateSplit() {
@@ -284,7 +324,7 @@ export default {
     },
     updateList() {
       this.reset(this.totalMonth);
-      this.listMonth = []
+      this.listMonth = [];
       this.progress = true;
       let maxMonth = new Date(this.date);
       maxMonth.setMonth(maxMonth.getMonth() + 1);
@@ -294,9 +334,10 @@ export default {
         .where("date", "<", maxMonth)
         .orderBy("date", "desc")
         .get()
-        .then(querySnapshot => {
+        .then((querySnapshot) => {
           this.aggregate(querySnapshot, this.totalMonth);
         });
+      this.user.sale ? this.getSales(1) : null;
     },
     reset(total) {
       total.tips = 0;
@@ -306,20 +347,78 @@ export default {
       total.salonSplit = 0;
     },
     aggregate(querySnapshot, total) {
-      querySnapshot.forEach(doc => {
+      querySnapshot.forEach((doc) => {
         let data = doc.data();
         total.tips += data.tips;
         total.beforeSplit += data.price;
         total.customer++;
       });
       this.progress = false;
-    }
+    },
+    getSales(type, dates) {
+      if (type === 0) {
+        db.collection("sales")
+          .where("user", "==", db.collection("users").doc(this.user.email))
+          .where("date", ">=", new Date(this.date))
+          .get()
+          .then((querySnapshot) => {
+            this.aggregateSales(querySnapshot, this.sale);
+          });
+      } else if (type === 1) {
+        let maxMonth = new Date(this.date);
+        maxMonth.setMonth(maxMonth.getMonth() + 1);
+        db.collection("sales")
+          .where("user", "==", db.collection("users").doc(this.user.email))
+          .where("date", ">=", new Date(this.date))
+          .where("date", "<", maxMonth)
+          .get()
+          .then((querySnapshot) => {
+            this.aggregateSales(querySnapshot, this.sale);
+          });
+      } else if (type === 2) {
+        db.collection("sales")
+          .where("user", "==", db.collection("users").doc(this.user.email))
+          .where("date", "==", new Date(dates[0]))
+          .get()
+          .then((querySnapshot) => {
+            this.aggregateSales(querySnapshot, this.saleRange);
+          });
+      } else if (type === 3) {
+        db.collection("sales")
+          .where("user", "==", db.collection("users").doc(this.user.email))
+          .where("date", ">=", new Date(dates[0]))
+          .where("date", "<=", new Date(dates[1]))
+          .get()
+          .then((querySnapshot) => {
+            this.aggregateSales(querySnapshot, this.saleRange);
+          });
+      }
+    },
+  aggregateSales(querySnapshot, sale) {
+    querySnapshot.forEach((doc) => {
+      let data = doc.data();
+      data.items.forEach((e) => {
+        sale.total += parseInt(e.qty) * parseFloat(e.price);
+        if (!sale.items[e.id]) {
+          sale.items[e.id] = {
+            name: e.name,
+            qty: e.qty,
+            total: parseInt(e.qty) * parseFloat(e.price),
+          };
+        } else {
+          sale.items[e.id].qty += parseInt(e.qty);
+          sale.items[e.id].total += parseFloat(e.price);
+        }
+      });
+      data.discount ? sale.total - data.discount : sale.total;
+    });
+    console.log(sale);
+  },
   }
 };
 </script>
 
 <style scoped>
-
 .update {
   color: white;
 }

@@ -30,7 +30,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .v-application .ma-2 {
   margin: 4px 3px !important;
 }

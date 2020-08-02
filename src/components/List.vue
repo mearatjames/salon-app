@@ -78,7 +78,7 @@
        <v-btn @click="generateReport" color="teal" rounded dark>Generate Report</v-btn>
       </div>
       <div class="px-5">
-        <v-alert outlined icon="mdi-google-downasaur" prominent border="left" v-if="empty">
+        <v-alert color="teal" outlined icon="mdi-google-downasaur" prominent border="left" v-if="empty">
           <div class="title">No Transaction Found</div>
         </v-alert>
       </div>
@@ -233,7 +233,6 @@ export default {
           ])
         })
       }
-      console.log(rows)
       return rows
     },
     edit: function(transaction) {
@@ -355,6 +354,7 @@ export default {
       this.snackbar = true;
     },
     updateDates(dates) {
+      this.empty = false
       if (dates.length < 1) {
         return;
       }
@@ -386,7 +386,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .amount {
   text-align: right;
 }

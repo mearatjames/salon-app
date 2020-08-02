@@ -2,22 +2,22 @@
   <v-app class="override">
     <v-app-bar app color="teal" dark>
       <div v-if="isLoggedIn" class="d-flex align-center user">
-        <v-btn class="pl-0" to='/user' text>
-        <v-avatar size="48" color="teal darken-3">
-          <img :src="thumbnail" alt="Aiai.91" />
-        </v-avatar>
-        <div class="username text-h3">{{this.user.name}}</div>
+        <v-btn class="pl-0" to="/user" text>
+          <v-avatar size="48" color="teal darken-3">
+            <img :src="thumbnail" alt="Aiai.91" />
+          </v-avatar>
+          <div class="username text-h6">{{this.user.name}}</div>
         </v-btn>
       </div>
       <v-spacer></v-spacer>
       <v-btn v-if="isLoggedIn" v-on:click="logout" depressed text medium>Logout</v-btn>
     </v-app-bar>
-    <NavDrawer></NavDrawer>
-    <div class="padding">
-      <v-content>
+    <NavDrawer ></NavDrawer>
+    <v-main >
+        <div class="padding">
         <router-view :thumbnail="thumbnail" v-on:updateThumbnail="updateThumbnail"></router-view>
-      </v-content>
-    </div>
+        </div>
+    </v-main>
     <BottomNav />
   </v-app>
 </template>
@@ -29,7 +29,7 @@ import "firebase/storage";
 import db from "./components/firebaseInit";
 import BottomNav from "./components/BottomNav";
 import NavDrawer from "./components/NavDrawer";
-import thumbnail from "./assets/icon.jpg"
+import thumbnail from "./assets/icon.jpg";
 
 export default {
   name: "App",
@@ -51,7 +51,7 @@ export default {
       this.currentUser = firebase.auth().currentUser.email;
       if (localStorage.getItem("user")) {
         this.user = JSON.parse(localStorage.getItem("user"));
-        this.getThumbnail()
+        this.getThumbnail();
       } else {
         db.collection("users")
           .doc(this.currentUser)
@@ -66,7 +66,7 @@ export default {
               })
             );
             this.user = JSON.parse(localStorage.getItem("user"));
-            this.getThumbnail()
+            this.getThumbnail();
           });
       }
     }
@@ -75,14 +75,14 @@ export default {
     getThumbnail() {
       let storageRef = firebase.storage().ref();
       storageRef
-      .child(this.user.uid + "/thumbnail.jpeg")
-      .getDownloadURL()
-      .then(url => {
-        this.thumbnail = url
-      })
-      .catch(error => {
-        console.log(error);
-      });
+        .child(this.user.uid + "/thumbnail.jpeg")
+        .getDownloadURL()
+        .then(url => {
+          this.thumbnail = url;
+        })
+        .catch(error => {
+          console.log(error);
+        });
     },
     logout: function() {
       firebase
@@ -94,14 +94,13 @@ export default {
         });
     },
     updateThumbnail(url) {
-      this.thumbnail = url
+      this.thumbnail = url;
     }
   }
 };
 </script>
 
 <style>
-
 .override .v-application--wrap {
   min-height: 100%;
 }
@@ -114,9 +113,16 @@ body {
   text-transform: none;
   font-size: 18px;
 }
+
 @media only screen and (max-width: 1068px) {
-  .padding {
+  .v-main div.padding {
     padding-bottom: 70px;
   }
+}
+
+@media (hover: none) {
+:hover::before {
+      background-color: transparent
+}
 }
 </style>
