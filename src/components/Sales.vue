@@ -46,7 +46,7 @@
       </v-card-text>
     </div>
     <div v-else>
-      <Checkout v-on:remove="remove" v-on:cleanup="cleanup" v-on:updateQty="updateQty" :selectedProducts="items" v-on:back="back" />
+      <Checkout v-on:remove="remove" v-on:cleanup="cleanup" :selectedProducts="items" v-on:back="back" />
     </div>
   </v-container>
 </template>
