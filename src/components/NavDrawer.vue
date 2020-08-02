@@ -1,15 +1,17 @@
 <template>
   <v-navigation-drawer color="teal" dark app :permanent="$vuetify.breakpoint.mdAndUp">
-    <v-list-item>
-      <v-list-item-content>
-        <v-list-item-title class="title">Salon App</v-list-item-title>
-        <v-list-item-subtitle></v-list-item-subtitle>
-      </v-list-item-content>
-    </v-list-item>
+    <v-list height="64px">
+      <v-list-item>
+        <v-list-item-content>
+          <v-list-item-title class="title">Salon App</v-list-item-title>
+          <v-list-item-subtitle></v-list-item-subtitle>
+        </v-list-item-content>
+      </v-list-item>
+    </v-list>
 
     <v-divider></v-divider>
 
-    <v-list nav>
+    <v-list v-show="user" nav>
       <v-list-item v-for="item in items" :key="item.title" link :to="item.link">
         <v-list-item-icon>
           <v-icon>{{ item.icon }}</v-icon>

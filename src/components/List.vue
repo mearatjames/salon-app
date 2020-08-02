@@ -233,7 +233,6 @@ export default {
           ])
         })
       }
-      console.log(rows)
       return rows
     },
     edit: function(transaction) {
@@ -355,6 +354,7 @@ export default {
       this.snackbar = true;
     },
     updateDates(dates) {
+      this.empty = false
       if (dates.length < 1) {
         return;
       }
@@ -386,7 +386,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .amount {
   text-align: right;
 }

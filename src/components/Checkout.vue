@@ -18,6 +18,7 @@
           >
             <template v-slot:activator="{ on }">
               <v-text-field
+                dense
                 class="date pt-0"
                 v-model="formattedDate"
                 color="teal"
@@ -47,6 +48,18 @@
             colored-border
             icon="mdi-cart-outline"
           >No items in the cart.</v-alert>
+        </v-col>
+      </v-row>
+      <v-row dense>
+        <v-col cols="12">
+          <v-text-field
+              dense
+              v-model="customer"
+              prepend-icon="mdi-face-woman"
+              placeholder=" "
+              label="Customer"
+              color="teal"
+            ></v-text-field>
         </v-col>
       </v-row>
       <div v-for="(product, index) in selectedProducts" :key="product.sku">
@@ -176,6 +189,7 @@ export default {
     dialog: false,
     valid: false,
     qty: 1,
+    customer: null,
     datePicker: false,
     discount: 0,
     qtyRules: [
@@ -200,11 +214,11 @@ export default {
         )
       let data = {
         date: new Date(this.date),
+        customer: this.customer,
         discount: this.discount,
         user: db.doc(`/users/${this.user}`),
         items: extracted
       };
-      console.log(data)
       db.collection("sales")
         .add(data)
         .then(() => {

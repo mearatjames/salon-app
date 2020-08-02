@@ -12,7 +12,10 @@
         <v-expansion-panel-content color="teal darken-1">
           <ul class="today-list">
                 <li v-for="item in today.items" :key="item.name">{{`${item.name}: ${item.qty} `}}</li>
-              </ul>
+          </ul>
+          <div class="text-right">
+           <v-btn to="/sales/list" rounded small light>Details</v-btn>
+          </div>
         </v-expansion-panel-content>
       </v-expansion-panel>
       </v-expansion-panels>
@@ -126,13 +129,8 @@ export default {
          })
           data.discount ? this.today.total - data.discount : this.today.total
         });
-
-        console.log(this.today)
       });
     },
-    updateQty(index, qty) {
-      console.log(index, qty)
-    }
   }
 };
 </script>

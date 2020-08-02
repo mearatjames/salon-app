@@ -7,6 +7,7 @@ import Login from "./components/Login.vue";
 import User from "./components/User.vue";
 import NotFound from "./components/NotFound.vue"
 import Sales from "./components/Sales.vue"
+import SalesList from "./components/SalesList.vue"
 import firebase from "firebase/app";
 import 'firebase/auth'
 
@@ -47,6 +48,14 @@ let router = new Router({
       }
     },
     {
+      path: "/sales/list",
+      component: SalesList,
+      name: "SalesList",
+      meta: {
+        requiresAuth: true
+      }
+    },
+    {
       path: "/user",
       component: User,
       name: "User",
@@ -82,9 +91,7 @@ router.beforeEach((to, from, next) => {
       next();
     }
   } else if (to.matched.some((record) => record.meta.requiresGuest)) {
-    // Check if NO logged user
     if (firebase.auth().currentUser) {
-      // Go to login
       next({
         path: "/",
       });
