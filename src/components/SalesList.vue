@@ -34,7 +34,7 @@
       </li>
       <div class="animate" v-bind:class="{'animate-right': switcher}"></div>
     </ul>
-    <DateRangePicker v-on:updateDates="updateDates" v-bind:initDates="initDates" v-if="switcher"></DateRangePicker>
+    <date-range-picker v-on:updateDates="updateDates" v-bind:initDates="initDates" v-if="switcher"></date-range-picker>
     <v-menu
       v-else
       ref="menu"
@@ -236,15 +236,6 @@ export default {
           .then((querySnapshot) => {
             this.listData(querySnapshot);
           });
-        // db.collection("transactions")
-        //   .where("user", "==", db.collection("users").doc(this.user.email))
-        //   .where("date", ">=", new Date(dates[0]))
-        //   .where("date", "<=", new Date(dates[1]))
-        //   .orderBy("date", "desc")
-        //   .get()
-        //   .then(querySnapshot => {
-        //     this.aggregate(querySnapshot, this.totalDateRange);
-        //   });
       }
     },
     updateList() {

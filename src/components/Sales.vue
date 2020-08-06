@@ -13,7 +13,8 @@
           <ul class="today-list">
                 <li v-for="item in today.items" :key="item.name">{{`${item.name}: ${item.qty} `}}</li>
           </ul>
-          <div class="text-right">
+          <div class="mt-4 text-right d-flex justify-space-between">
+           <v-btn :to="{name: 'Products', params: {products}}" rounded small light>Products</v-btn>
            <v-btn to="/sales/list" rounded small light>Details</v-btn>
           </div>
         </v-expansion-panel-content>
@@ -24,7 +25,7 @@
       <v-item-group v-model="selected" multiple>
         <v-row dense>
           <v-col cols="6" lg="3" md="6" sm="6" v-for="product in products" :key="product.sku">
-            <ProductCard :product="product" />
+            <product-card :product="product" />
           </v-col>
         </v-row>
       </v-item-group>
@@ -46,7 +47,7 @@
       </v-card-text>
     </div>
     <div v-else>
-      <Checkout v-on:remove="remove" v-on:cleanup="cleanup" :selectedProducts="items" v-on:back="back" />
+      <checkout v-on:remove="remove" v-on:cleanup="cleanup" :selectedProducts="items" v-on:back="back" />
     </div>
   </v-container>
 </template>
