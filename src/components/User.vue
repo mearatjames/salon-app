@@ -83,8 +83,8 @@ export default {
         format: "jpeg"
       };
       this.$refs.croppieRef.result(options, output => {
-        uploadRef.put(output).then(snapshopt => {
-          snapshopt.ref.getDownloadURL().then(url => {
+        uploadRef.put(output).then(snapshop => {
+          snapshop.ref.getDownloadURL().then(url => {
             this.cropped = url;
             this.$emit("updateThumbnail", this.cropped);
           });

@@ -13,32 +13,44 @@
               :disabled="progress"
               :ripple="false"
               class="z-index"
-              @click="switcher=false"
+              @click="switching(false)"
               text
               rounded
               width="140px"
               :color="switcher ? 'teal' : 'white'"
               dark
-            >Active</v-btn>
+              >Active</v-btn
+            >
           </li>
           <li>
             <v-btn
               :disabled="progress"
               :ripple="false"
               class="z-index"
-              @click="switcher=true"
+              @click="switching(true)"
               text
               rounded
               width="140px"
               :color="switcher ? 'white' : 'teal'"
               dark
-            >Inactive</v-btn>
+              >Inactive</v-btn
+            >
           </li>
-          <div class="animate" v-bind:class="{'animate-right': switcher}"></div>
+          <div
+            class="animate"
+            v-bind:class="{ 'animate-right': switcher }"
+          ></div>
         </ul>
         <v-item-group>
           <v-row dense>
-            <v-col cols="6" lg="3" md="6" sm="6" v-for="product in active" :key="product.sku">
+            <v-col
+              cols="6"
+              lg="3"
+              md="6"
+              sm="6"
+              v-for="product in list"
+              :key="product.id"
+            >
               <product-card v-on:selected="selected" :product="product" />
             </v-col>
           </v-row>
@@ -50,17 +62,23 @@
         </v-btn>
       </v-card-text>
     </template>
-    <product-edit :product="product" v-else v-on:cancel="cancel"></product-edit>
+    <product-edit
+      :product="product"
+      :isNew="isNew"
+      v-else
+      v-on:cancel="cancel"
+      v-on:refresh="refresh"
+    ></product-edit>
   </div>
 </template>
 
 <script>
-import db from "./firebaseInit";
-import ProductCard from "./ProductCard.vue";
-import ProductEdit from "./ProductEdit.vue";
+import db from './firebaseInit'
+import ProductCard from './ProductCard.vue'
+import ProductEdit from './ProductEdit.vue'
 
 export default {
-  name: "Products",
+  name: 'Products',
   props: {
     products: Array,
   },
@@ -72,52 +90,88 @@ export default {
     switcher: false,
     progress: false,
     product: null,
-    active: [],
+    activeProducts: [],
+    inactiveProducts: [],
     edit: false,
-    user: JSON.parse(localStorage.getItem("user")),
+    isNew: null,
+    user: JSON.parse(localStorage.getItem('user')),
   }),
   created() {
     if (!this.products) {
-      db.collection("products")
-        .where("active", "==", true)
-        .orderBy("name")
-        .get()
-        .then((querySnapshot) => {
-          querySnapshot.forEach((doc) => {
-            let data = doc.data();
-            this.active.push({
-              name: data.name,
-              price: data.price,
-              qty: 1,
-              sku: data["SKU"],
-              id: doc.id,
-              image: `https://firebasestorage.googleapis.com/v0/b/salon-app-d6c37.appspot.com/o/products%2F${doc.id}%2Fcard.jpg?alt=media`,
-            });
-          });
-        });
+      this.updateList()
     } else {
-      this.active = this.products;
+      this.activeProducts = this.products
     }
+  },
+  computed: {
+    list() {
+      if (this.switcher) {
+        return this.inactiveProducts
+      } else {
+        return this.activeProducts
+      }
+    },
   },
   methods: {
     add() {
       this.product = {
-        image: require("../assets/placeholder.jpg"),
+        image: require('../assets/placeholder.jpg'),
         name: null,
         price: null,
         active: true,
-      };
-      this.edit = true;
+      }
+      this.isNew = true
+      this.edit = true
     },
     cancel() {
-      this.edit = false;
+      this.edit = false
+    },
+    refresh() {
+      this.updateList()
+      this.edit = false
     },
     selected(product) {
-      this.product = product;
-      this.edit = true;
+      this.product = product
+      this.isNew = false
+      this.edit = true
+    },
+    async switching(e) {
+      if (this.switcher !== e) {
+        this.switcher = !this.switcher
+        this.updateList()
+      }
+    },
+    updateList() {
+      let temp = []
+      db.collection('products')
+        .where('active', '==', !this.switcher)
+        .where(
+          'users',
+          'array-contains',
+          db.collection('users').doc(this.user.email)
+        )
+        .orderBy('name')
+        .get()
+        .then(querySnapshot => {
+          querySnapshot.forEach(doc => {
+            let data = doc.data()
+            temp.push({
+              name: data.name,
+              price: data.price,
+              qty: 1,
+              active: data.active,
+              sku: data['SKU'] || null,
+              id: doc.id,
+              image: data.image,
+            })
+          })
+          this.switcher
+            ? (this.inactiveProducts = temp)
+            : (this.activeProducts = temp)
+        })
     },
   },
-};
+}
 </script>
 
 <style scoped>
