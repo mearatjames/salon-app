@@ -31,6 +31,7 @@ export default {
   methods: {
     update() {
       this.product.qty = 1
+      this.$emit('selected', this.product)
     },
   }
 };

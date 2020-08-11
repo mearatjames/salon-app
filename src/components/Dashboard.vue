@@ -180,7 +180,7 @@
             }}
           </div>
           <template v-for="item in totalSale.items">
-          <div :key="item.name" class="px-1 text-body-2 d-flex justify-space-between">
+          <div :key="item.id" class="px-1 text-body-2 d-flex justify-space-between">
             <span>{{`${item.name}: ${item.qty}`}}</span>
             <span>{{new Intl.NumberFormat("en-US", {
             style: "currency",
@@ -412,7 +412,6 @@ export default {
       });
       data.discount ? sale.total - data.discount : sale.total;
     });
-    console.log(sale);
   },
   }
 };

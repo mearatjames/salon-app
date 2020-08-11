@@ -34,6 +34,12 @@
     "vue-template-compiler": "^2.6.11",
     "vuetify-loader": "^1.3.0"
   },
+  "prettier": {
+      "trailingComma": "es5",
+      "tabWidth": 2,
+      "semi": false,
+      "singleQuote": true
+  },
   "eslintConfig": {
     "root": true,
     "env": {

@@ -1,8 +1,8 @@
 <template>
   <div class="text-center">
-    <div class="text-left">
+    <div class="text-left ma-2">
       <v-btn class="pl-0" to="/sales" exact text>
-        <v-icon class="mr-1">mdi-arrow-left</v-icon>Back
+        <v-icon class="mr-1">mdi-chevron-left</v-icon>Back
       </v-btn>
     </div>
     <ul class="switchers">
@@ -34,7 +34,7 @@
       </li>
       <div class="animate" v-bind:class="{'animate-right': switcher}"></div>
     </ul>
-    <DateRangePicker v-on:updateDates="updateDates" v-bind:initDates="initDates" v-if="switcher"></DateRangePicker>
+    <date-range-picker v-on:updateDates="updateDates" v-bind:initDates="initDates" v-if="switcher"></date-range-picker>
     <v-menu
       v-else
       ref="menu"
@@ -236,15 +236,6 @@ export default {
           .then((querySnapshot) => {
             this.listData(querySnapshot);
           });
-        // db.collection("transactions")
-        //   .where("user", "==", db.collection("users").doc(this.user.email))
-        //   .where("date", ">=", new Date(dates[0]))
-        //   .where("date", "<=", new Date(dates[1]))
-        //   .orderBy("date", "desc")
-        //   .get()
-        //   .then(querySnapshot => {
-        //     this.aggregate(querySnapshot, this.totalDateRange);
-        //   });
       }
     },
     updateList() {

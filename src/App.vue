@@ -12,13 +12,13 @@
       <v-spacer></v-spacer>
       <v-btn v-if="isLoggedIn" v-on:click="logout" depressed text medium>Logout</v-btn>
     </v-app-bar>
-    <NavDrawer ></NavDrawer>
+    <nav-drawer></nav-drawer>
     <v-main >
         <div class="padding">
         <router-view :thumbnail="thumbnail" v-on:updateThumbnail="updateThumbnail"></router-view>
         </div>
     </v-main>
-    <BottomNav />
+    <bottom-nav />
   </v-app>
 </template>
 

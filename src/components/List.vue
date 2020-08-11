@@ -74,11 +74,11 @@
           @change="updateList()"
         ></v-date-picker>
       </v-menu>
-      <div v-if="!empty" class="text-center pb-4">
+      <div v-if="Object.keys(transactions).length !== 0" class="text-center pb-4">
        <v-btn @click="generateReport" color="teal" rounded dark>Generate Report</v-btn>
       </div>
       <div class="px-5">
-        <v-alert color="teal" outlined icon="mdi-google-downasaur" prominent border="left" v-if="empty">
+        <v-alert color="teal" outlined icon="mdi-google-downasaur" prominent border="left" v-show="Object.keys(transactions).length === 0">
           <div class="title">No Transaction Found</div>
         </v-alert>
       </div>
@@ -266,7 +266,6 @@ export default {
       this.active = false;
     },
     updateList() {
-      this.empty = false;
       this.delivered = false;
       let maxMonth = new Date(this.date);
       maxMonth.setMonth(maxMonth.getMonth() + 1);
@@ -305,8 +304,6 @@ export default {
                 transactions[groupDate] = new Array(transaction);
               }
             });
-          } else {
-            this.empty = true;
           }
           this.delivered = true;
           this.progress = false;
@@ -328,6 +325,7 @@ export default {
             item.price = transaction.data.price;
             item.tips = transaction.data.tips;
             item.service = transaction.data.service;
+            item.customer = transaction.data.customer
           }
         });
       }
@@ -346,6 +344,7 @@ export default {
             item.price = transaction.data.price;
             item.tips = transaction.data.tips;
             item.service = transaction.data.service;
+            item.customer = transaction.data.customer
           }
         });
       }
@@ -354,7 +353,6 @@ export default {
       this.snackbar = true;
     },
     updateDates(dates) {
-      this.empty = false
       if (dates.length < 1) {
         return;
       }
