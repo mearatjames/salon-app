@@ -3,7 +3,7 @@
     <template v-if="!edit">
       <div class="text-left">
         <v-btn class="pl-0" to="/sales" exact text>
-          <v-icon class="mr-1">mdi-arrow-left</v-icon>Back
+          <v-icon class="mr-1">mdi-chevron-left</v-icon>Back
         </v-btn>
       </div>
       <div class="text-center">
@@ -41,6 +41,17 @@
             v-bind:class="{ 'animate-right': switcher }"
           ></div>
         </ul>
+        <v-row>
+        <v-col cols="12" v-show="list.length == 0">
+          <v-alert
+            color="teal"
+            border="left"
+            elevation="2"
+            colored-border
+            icon="mdi-tag-outline"
+          >No product found.</v-alert>
+        </v-col>
+      </v-row>
         <v-item-group>
           <v-row dense>
             <v-col

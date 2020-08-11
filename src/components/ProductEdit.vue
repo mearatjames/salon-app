@@ -101,6 +101,14 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
+    <v-dialog v-model="processing" persistent width="300">
+      <v-card color="teal" dark>
+        <v-card-text>
+          Processing
+          <v-progress-linear indeterminate color="white" class="mb-0"></v-progress-linear>
+        </v-card-text>
+      </v-card>
+    </v-dialog>
   </v-card>
 </template>
 
@@ -125,6 +133,7 @@ export default {
       cropped: null,
       valid: false,
       imageUpdated: false,
+      processing: false,
       dialog: false,
       user: JSON.parse(localStorage.getItem('user')),
       nameRules: [(v) => !!v || 'Name is required'],
@@ -174,6 +183,7 @@ export default {
       })
     },
     add() {
+      this.processing = true
       if (this.isNew) {
         let data = this.currentProduct
 
@@ -222,6 +232,7 @@ export default {
       }
     },
     del() {
+      this.processing = true
       let imageRef = storageRef.child(
         `products/${this.currentProduct.id}/card.jpg`
       )

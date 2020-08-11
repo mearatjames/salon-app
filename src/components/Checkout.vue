@@ -3,7 +3,7 @@
     <v-form v-model="valid">
       <div class="d-flex justify-space-between align-top">
         <v-btn class="pl-0" @click="$emit('back')" text>
-          <v-icon class="mr-1">mdi-arrow-left</v-icon>Back
+          <v-icon class="mr-1">mdi-chevron-left</v-icon>Back
         </v-btn>
         <div class="pr-3">
           <v-menu

@@ -1,8 +1,8 @@
 <template>
   <div class="text-center">
-    <div class="text-left">
+    <div class="text-left ma-2">
       <v-btn class="pl-0" to="/sales" exact text>
-        <v-icon class="mr-1">mdi-arrow-left</v-icon>Back
+        <v-icon class="mr-1">mdi-chevron-left</v-icon>Back
       </v-btn>
     </div>
     <ul class="switchers">
