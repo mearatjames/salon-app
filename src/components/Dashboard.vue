@@ -79,7 +79,9 @@
 
             <v-list-item-content>
               <v-list-item-subtitle>Customers</v-list-item-subtitle>
-              <v-list-item-title>{{ total.customer }}</v-list-item-title>
+              <v-list-item-title>{{ total.customer }} <v-chip class="new-violator" v-if="total.newCust > 0" color="orange" filter small outlined pill
+                      >{{ total.newCust }} New</v-chip
+                    ></v-list-item-title>
             </v-list-item-content>
           </v-list-item>
           <v-list-item>
@@ -218,6 +220,7 @@ export default {
       mySplit: 0,
       salonSplit: 0,
       customer: 0,
+      newCust: 0
     },
     totalDateRange: {
       tips: 0,
@@ -225,6 +228,7 @@ export default {
       mySplit: 0,
       salonSplit: 0,
       customer: 0,
+      newCust: 0
     },
     sale: { total: 0, items: {} },
     saleRange: { total: 0, items: {} },
@@ -352,6 +356,7 @@ export default {
         total.tips += data.tips;
         total.beforeSplit += data.price;
         total.customer++;
+        data.newCust ? total.newCust++ : ""
       });
       this.progress = false;
     },

@@ -98,7 +98,9 @@
                 class="service-text"
               >{{Object.keys(transaction.service).join(', ')}}</v-list-item-title>
               <v-list-item-subtitle>
-                {{transaction.customer}}
+                {{transaction.customer}} <v-chip class="new-violator" v-if="transaction.newCust" color="orange" filter x-small outlined pill
+                      >New</v-chip
+                    >
               </v-list-item-subtitle>
             </v-list-item-content>
             <v-list-item-content class="amount">
@@ -294,6 +296,7 @@ export default {
                 id: doc.id,
                 date: data.date.toDate(),
                 customer: data.customer || null,
+                newCust: data.newCust || null,
                 price: data.price,
                 tips: data.tips || 0,
                 service: data.service
@@ -325,7 +328,8 @@ export default {
             item.price = transaction.data.price;
             item.tips = transaction.data.tips;
             item.service = transaction.data.service;
-            item.customer = transaction.data.customer
+            item.customer = transaction.data.customer;
+            item.newCust = transaction.data.newCust;
           }
         });
       }
@@ -344,7 +348,8 @@ export default {
             item.price = transaction.data.price;
             item.tips = transaction.data.tips;
             item.service = transaction.data.service;
-            item.customer = transaction.data.customer
+            item.customer = transaction.data.customer;
+            item.newCust = transaction.data.newCust;
           }
         });
       }

@@ -125,4 +125,8 @@ body {
       background-color: transparent
 }
 }
+
+.new-violator {
+  margin-left: 6px;
+}
 </style>
