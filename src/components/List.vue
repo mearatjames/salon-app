@@ -105,7 +105,7 @@
             </v-list-item-content>
             <v-list-item-content class="amount">
               <v-list-item-subtitle>
-                <strong>${{transaction.price}}</strong>
+                <strong>${{transaction.price}}</strong> <template v-if="transaction.deposit"> (Deposit ${{transaction.deposit}})</template>
               </v-list-item-subtitle>
               <v-list-item-subtitle>Tips ${{transaction.tips}}</v-list-item-subtitle>
             </v-list-item-content>
@@ -205,9 +205,12 @@ export default {
     generateReport: async function() {
       let columnsHeader = [
         {name: 'Date', key: 'date' },
+        {name: 'Customer', key: 'customer' },
         {name: 'Service', key: 'service' },
-        {name: 'Customer', key: 'customer', },
-        {name: 'Price', key: 'price', totalsRowFunction: 'sum', style: { numFmt: '"$"#,##0.00' }}
+        {name: 'Price', key: 'price', totalsRowFunction: 'sum', style: { numFmt: '"$"#,##0.00' }},
+        {name: 'After Split', key: 'split', totalsRowFunction: 'sum', style: { numFmt: '"$"#,##0.00' }},
+        {name: 'Deposit', key: 'deposit', totalsRowFunction: 'sum', style: { numFmt: '"$"#,##0.00' }},
+        {name: 'Net Payout', key: 'payout', totalsRowFunction: 'sum', style: { numFmt: '"$"#,##0.00' }}
       ]
       let fileName
       let data
@@ -221,7 +224,17 @@ export default {
       let rows = await this.translateRows(data)
       createWorkbook(rows, columnsHeader, fileName)
     },
-    translateRows(data) {
+    getSplit(){
+      return db.collection("users")
+      .doc(this.user.email)
+      .get()
+      .then((querySnapshot) => {
+        return querySnapshot.data().split;
+      });
+    },
+    async translateRows(data) {
+      let split = await this.getSplit()
+      console.log(split)
       let rows = []
       for (let date in data) {
         data[date].forEach(row => {
@@ -229,9 +242,12 @@ export default {
             new Intl.DateTimeFormat("en-US", {
                 timeZone: "UTC"
               }).format(row.date),
-            Object.keys(row.service).join(', '),
             row.customer,
-            row.price
+            Object.keys(row.service).join(', '),
+            row.price,
+            Math.ceil(row.price * split) / 100,
+            row.deposit,
+            (Math.ceil(row.price * split) / 100) - row.deposit
           ])
         })
       }
@@ -298,6 +314,7 @@ export default {
                 customer: data.customer || null,
                 newCust: data.newCust || null,
                 price: data.price,
+                deposit: data.deposit || null,
                 tips: data.tips || 0,
                 service: data.service
               };
@@ -330,6 +347,7 @@ export default {
             item.service = transaction.data.service;
             item.customer = transaction.data.customer;
             item.newCust = transaction.data.newCust;
+            item.deposit = transaction.data.deposit;
           }
         });
       }
@@ -350,6 +368,7 @@ export default {
             item.service = transaction.data.service;
             item.customer = transaction.data.customer;
             item.newCust = transaction.data.newCust;
+            item.deposit = transaction.data.deposit;
           }
         });
       }
