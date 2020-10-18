@@ -118,7 +118,7 @@
                   maxlength="6"
                   min="0"
                   inputmode="decimal"
-                  >{{ price }}</v-text-field
+                  >{{ deposit }}</v-text-field
                 >
               </v-col>
             </v-row>
@@ -286,8 +286,10 @@ export default {
   created() {
     if (this.transaction !== undefined && this.transaction !== null) {
       this.price = this.transaction.price
+      this.newCust = this.transaction.newCust || null
       this.customer = this.transaction.customer
       this.tips = this.transaction.tips || 0
+      this.deposit = this.transaction.deposit || null
       this.date = this.transaction.date.toLocaleDateString('fr-CA', {
         timeZone: 'UTC',
       })

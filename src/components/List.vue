@@ -87,27 +87,27 @@
           <strong>{{date}}</strong>
         </v-subheader>
         <template v-for="(transaction, index) in tdate">
-          <v-list-item @click="edit(transaction)" :key="date + index">
-            <v-list-item-avatar>
-              <v-avatar color="teal" size="30">
-                <span class="white--text title">{{index + 1}}</span>
+          <v-list-item class="pl-0 pr-2" @click="edit(transaction)" :key="date + index">
+            <v-list-item-avatar class="mr-0">
+              <v-avatar color="teal" size="24">
+                <span class="white--text">{{index + 1}}</span>
               </v-avatar>
             </v-list-item-avatar>
             <v-list-item-content class="service">
-              <v-list-item-title
-                class="service-text"
-              >{{Object.keys(transaction.service).join(', ')}}</v-list-item-title>
               <v-list-item-subtitle>
                 {{transaction.customer}} <v-chip class="new-violator" v-if="transaction.newCust" color="orange" filter x-small outlined pill
                       >New</v-chip
                     >
               </v-list-item-subtitle>
+              <v-list-item-title
+                class="service-text"
+              >{{Object.keys(transaction.service).join(', ')}}</v-list-item-title>
             </v-list-item-content>
             <v-list-item-content class="amount">
               <v-list-item-subtitle>
-                <strong>${{transaction.price}}</strong> <template v-if="transaction.deposit"> (Deposit ${{transaction.deposit}})</template>
+                <strong>${{transaction.price}} </strong> <span class="red--text" v-if="transaction.deposit">(- ${{transaction.deposit}})</span>
               </v-list-item-subtitle>
-              <v-list-item-subtitle>Tips ${{transaction.tips}}</v-list-item-subtitle>
+              <v-list-item-subtitle> Tips ${{transaction.tips}}</v-list-item-subtitle>
             </v-list-item-content>
           </v-list-item>
         </template>
@@ -413,7 +413,7 @@ export default {
   text-align: right;
 }
 .service {
-  flex-grow: 3;
+  flex-grow: 2;
 }
 .service-text {
   white-space: normal;
@@ -421,7 +421,6 @@ export default {
 .total {
   display: flex;
   justify-content: flex-end;
-  padding-right: 10px;
 }
 .subheader {
   height: 30px;
