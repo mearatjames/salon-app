@@ -1,13 +1,13 @@
 <template>
   <div v-if="delivered">
-    <Transaction
+    <service-transaction
       v-if="active"
       :transaction="tData"
       :modify="modify"
       v-on:back="back"
       v-on:deleted="deleted"
       v-on:updated="updated"
-    ></Transaction>
+    ></service-transaction>
 
     <v-list v-else two-line subheader>
       <div class="text-center">
@@ -134,7 +134,8 @@
 </template>
 
 <script>
-import Transaction from "./Transaction.vue";
+import ServiceTransaction from './ServiceTransaction.vue'
+// import ExpenseTransaction from './ExpenseTransaction.vue'
 import DateRangePicker from "./DateRangePicker.vue";
 import createWorkbook from "./createWorkbook";
 import db from "./firebaseInit";
@@ -142,7 +143,8 @@ import db from "./firebaseInit";
 export default {
   name: "List",
   components: {
-    Transaction,
+    ServiceTransaction,
+    // ExpenseTransaction,
     DateRangePicker
   },
   data: () => ({

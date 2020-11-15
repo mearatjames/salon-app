@@ -7,6 +7,7 @@ import Login from "./components/Login.vue";
 import User from "./components/User.vue";
 import NotFound from "./components/NotFound.vue"
 import Sales from "./components/Sales.vue"
+// import Expense from "./components/Expense.vue"
 import SalesList from "./components/SalesList.vue"
 import Products from "./components/Products.vue"
 import firebase from "firebase/app";
@@ -32,6 +33,14 @@ let router = new Router({
         requiresAuth: true,
       },
     },
+    // {
+    //   path: "/expense",
+    //   component: Expense,
+    //   name: "Expense",
+    //   meta: {
+    //     requiresAuth: true,
+    //   },
+    // },
     {
       path: "/list",
       component: List,
