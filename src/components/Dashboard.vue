@@ -349,6 +349,7 @@ export default {
       total.beforeSplit = 0;
       total.mySplit = 0;
       total.salonSplit = 0;
+      total.newCust = 0;  
     },
     aggregate(querySnapshot, total) {
       querySnapshot.forEach((doc) => {
@@ -400,6 +401,8 @@ export default {
       }
     },
   aggregateSales(querySnapshot, sale) {
+    sale.total = 0
+    sale.items = {}
     querySnapshot.forEach((doc) => {
       let data = doc.data();
       data.items.forEach((e) => {
