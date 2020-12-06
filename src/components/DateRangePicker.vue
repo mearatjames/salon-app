@@ -34,7 +34,7 @@
         text
         dark
         color="teal"
-        @click="$refs.menu.save(dates), $emit('updateDates', dates)"
+        @click="$refs.menu.save(dates), $emit('update-dates', dates)"
       >OK</v-btn>
     </v-date-picker>
   </v-menu>

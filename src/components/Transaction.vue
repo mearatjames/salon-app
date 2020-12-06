@@ -51,7 +51,6 @@
                   persistent-hint
                   prepend-icon="event"
                   inputmode="none"
-                  :disabled="modify == true"
                   @blur="date = parseDate(dateFormatted)"
                   v-on="on"
                 ></v-text-field>

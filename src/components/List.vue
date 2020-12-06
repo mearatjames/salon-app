@@ -41,7 +41,7 @@
         <div class="animate" v-bind:class="{'animate-right': switcher}"></div>
       </ul>
     </div>
-    <DateRangePicker v-on:updateDates="updateDates" v-bind:initDates="initDates" v-if="switcher"></DateRangePicker>
+    <DateRangePicker v-on:update-dates="updateDates" v-bind:initDates="initDates" v-if="switcher"></DateRangePicker>
       <v-menu
         v-else
         ref="menu"
@@ -195,7 +195,7 @@ export default {
       .orderBy("date", "desc")
       .get()
       .then(querySnapshot => {
-        this.listData(querySnapshot)
+        this.listData(querySnapshot, 'Monthly')
       })
       .catch(error => {
         console.error(error);
@@ -294,13 +294,13 @@ export default {
         .orderBy("date", "desc")
         .get()
         .then(querySnapshot => {
-          this.listData(querySnapshot)
+          this.listData(querySnapshot, 'Monthly')
         })
         .catch(error => {
           console.error(error);
         });
     },
-    listData(querySnapshot) {
+    listData(querySnapshot, listType) {
           let transactions = {}
           if (!querySnapshot.empty) {
             querySnapshot.forEach(doc => {
@@ -327,51 +327,11 @@ export default {
           }
           this.delivered = true;
           this.progress = false;
-          this.switcher ? this.rangeTr = transactions : this.monthTr = transactions
+          listType === "Range" ? this.rangeTr = transactions : this.monthTr = transactions
     },
-    updated(transaction) {
-      if (this.rangeTr[
-        new Intl.DateTimeFormat("en-US", { timeZone: "UTC" }).format(
-          transaction.data.date
-        )
-      ]) {
-        this.rangeTr[
-          new Intl.DateTimeFormat("en-US", { timeZone: "UTC" }).format(
-            transaction.data.date
-          )
-        ].forEach(item => {
-          if (item.id === transaction.id) {
-            item.id = transaction.id;
-            item.price = transaction.data.price;
-            item.tips = transaction.data.tips;
-            item.service = transaction.data.service;
-            item.customer = transaction.data.customer;
-            item.newCust = transaction.data.newCust;
-            item.deposit = transaction.data.deposit;
-          }
-        });
-      }
-      if (this.monthTr[
-        new Intl.DateTimeFormat("en-US", { timeZone: "UTC" }).format(
-          transaction.data.date
-        )
-      ]) {
-        this.monthTr[
-          new Intl.DateTimeFormat("en-US", { timeZone: "UTC" }).format(
-            transaction.data.date
-          )
-        ].forEach(item => {
-          if (item.id === transaction.id) {
-            item.id = transaction.id;
-            item.price = transaction.data.price;
-            item.tips = transaction.data.tips;
-            item.service = transaction.data.service;
-            item.customer = transaction.data.customer;
-            item.newCust = transaction.data.newCust;
-            item.deposit = transaction.data.deposit;
-          }
-        });
-      }
+    updated() {
+      this.updateList()
+      this.updateDates(this.initDates)
       this.active = false;
       this.snackbarText = "updated";
       this.snackbar = true;
@@ -388,7 +348,7 @@ export default {
           .where("date", "==", new Date(dates[0]))
           .get()
           .then(querySnapshot => {
-            this.listData(querySnapshot)
+            this.listData(querySnapshot, 'Range')
           });
       } else {
         this.initDates = dates;
@@ -400,7 +360,7 @@ export default {
           .orderBy("date", "desc")
           .get()
           .then(querySnapshot => {
-            this.listData(querySnapshot)
+            this.listData(querySnapshot, 'Range')
           });
       }
     },
