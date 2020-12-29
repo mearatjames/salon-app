@@ -286,7 +286,7 @@ export default {
     updateList() {
       this.delivered = false;
       let maxMonth = new Date(this.date);
-      maxMonth.setMonth(maxMonth.getMonth() + 1);
+      maxMonth.setUTCMonth(maxMonth.getUTCMonth() + 1);
       db.collection("transactions")
         .where("user", "==", db.collection("users").doc(this.user.email))
         .where("date", ">=", new Date(this.date))

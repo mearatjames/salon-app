@@ -31,7 +31,7 @@
         <div class="animate" v-bind:class="{ 'animate-right': switcher }"></div>
       </ul>
     </div>
-    <DateRangePicker v-on:updateDates="updateDates" v-bind:initDates="initDates" v-if="switcher"></DateRangePicker>
+    <DateRangePicker v-on:update-dates="updateDates" v-bind:initDates="initDates" v-if="switcher"></DateRangePicker>
     <v-menu
       v-else
       ref="menu"
@@ -331,7 +331,7 @@ export default {
       this.listMonth = [];
       this.progress = true;
       let maxMonth = new Date(this.date);
-      maxMonth.setMonth(maxMonth.getMonth() + 1);
+      maxMonth.setUTCMonth(maxMonth.getUTCMonth() + 1);
       db.collection("transactions")
         .where("user", "==", db.collection("users").doc(this.user.email))
         .where("date", ">=", new Date(this.date))
@@ -372,7 +372,7 @@ export default {
           });
       } else if (type === 1) {
         let maxMonth = new Date(this.date);
-        maxMonth.setMonth(maxMonth.getMonth() + 1);
+        maxMonth.setUTCMonth(maxMonth.getUTCMonth() + 1);
         db.collection("sales")
           .where("user", "==", db.collection("users").doc(this.user.email))
           .where("date", ">=", new Date(this.date))
