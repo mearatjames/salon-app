@@ -176,7 +176,13 @@
                     <br />
                     <strong>Customer:</strong>
                     {{ dialogContent.customer }}
-                    <v-chip class="new-violator" v-if="dialogContent.newCust" color="orange" small outlined pill
+                    <v-chip
+                      class="new-violator"
+                      v-if="dialogContent.newCust"
+                      color="orange"
+                      small
+                      outlined
+                      pill
                       >New</v-chip
                     >
                     <br />
@@ -306,6 +312,7 @@ export default {
       this.price = null
       this.tips = null
       this.customer = null
+      this.deposit = null
       this.date = new Date().toLocaleDateString('fr-CA')
       this.dateFormatted = this.formatDate(
         new Date().toLocaleDateString('fr-CA')
